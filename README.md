@@ -1,2 +1,2 @@
 # D18-Script-Agent
-D18 Script Agent — AI-powered screenplay development agent by DAEDAL AI.
+D18 Script Agent — AI-powered screenplay development agent by DADEUS AI.
