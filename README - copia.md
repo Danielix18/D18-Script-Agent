@@ -1,6 +1,6 @@
 # D18 Script Agent
 
-**D18 Script Agent** is the first AI agent developed under **DAEDAL AI**, focused on screenplay and script development.
+**D18 Script Agent** is the first AI agent developed under **DADEUS AI**, focused on screenplay and script development.
 
 D18 is designed to assist creators throughout the development of a screenplay, providing an AI-powered workspace for developing, reviewing and managing scripts.
 
@@ -10,9 +10,9 @@ D18 is designed to assist creators throughout the development of a screenplay, p
 
 ## Developed by
 
-**DAEDAL AI**
+**DADEUS AI**
 
-> DAEDAL AI is currently an independent project and is not yet incorporated as a registered company.
+> DADEUS AI is currently an independent project and is not yet incorporated as a registered company.
 
 ## Features
 
@@ -98,7 +98,7 @@ Users should independently review all generated material before using it in prof
 
 ## Copyright
 
-Copyright © 2026 DAEDAL AI.
+Copyright © 2026 DADEUS AI.
 
 All rights reserved.
 
