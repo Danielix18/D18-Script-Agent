@@ -1,8 +1,8 @@
 # D18 Script Agent — Proprietary Software License
 
-Copyright © 2026 DAEDAL AI. All rights reserved.
+Copyright © 2026 DADEUS AI. All rights reserved.
 
-D18 Script Agent is proprietary software developed and distributed under the DAEDAL AI name.
+D18 Script Agent is proprietary software developed and distributed under the DADEUS AI name.
 
 ## 1. Grant of License
 
@@ -25,7 +25,7 @@ The user may not:
 
 ## 3. Ownership
 
-The software remains the intellectual property of DAEDAL AI.
+The software remains the intellectual property of DADEUS AI.
 
 The purchase, download or installation of D18 does not transfer ownership of the software to the user.
 
@@ -35,7 +35,7 @@ D18 may generate text and other material through artificial intelligence.
 
 The user is responsible for reviewing and determining how generated material is used.
 
-DAEDAL AI does not guarantee that AI-generated content will be accurate, original, complete or suitable for a particular purpose.
+DADEUS AI does not guarantee that AI-generated content will be accurate, original, complete or suitable for a particular purpose.
 
 ## 5. Availability
 
@@ -63,4 +63,4 @@ This license is intended to be interpreted in accordance with applicable Spanish
 
 ---
 
-Copyright © 2026 DAEDAL AI. All rights reserved.
+Copyright © 2026 DADEUS AI. All rights reserved.
