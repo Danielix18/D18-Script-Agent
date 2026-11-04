@@ -4,59 +4,306 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="D18 Script Agent is a local AI-powered screenwriting assistant built with Python and Ollama by DAEDAL AI.">
-    <meta name="keywords" content="AI screenwriting agent, Python AI, Ollama, local AI, scriptwriting assistant, filmmaking">
-    <meta name="author" content="DAEDAL AI">
+
     <title>D18 Script Agent | DAEDAL AI</title>
+
+    <meta name="description" content="Meet D18 Script Agent, a local AI-powered screenwriting assistant built with Python and Ollama for filmmakers and storytellers.">
+    <meta name="keywords" content="AI Screenwriting Agent, Python AI, Ollama, Local AI, Screenwriting Software, Film Production">
+    <meta name="author" content="DAEDAL AI">
+
+    <meta property="og:title" content="D18 Script Agent">
+    <meta property="og:description" content="The AI Agent for Cinematic Storytelling.">
+    <meta property="og:type" content="website">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #090b10;
+            color: #f2f2f2;
+            font-family: Arial, sans-serif;
+            line-height: 1.7;
+        }
+
+        header {
+            padding: 25px 8%;
+            border-bottom: 1px solid #252a35;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            font-size: 19px;
+            font-weight: bold;
+            letter-spacing: 4px;
+        }
+
+        .brand span {
+            color: #f39a38;
+        }
+
+        nav a {
+            color: #aaa;
+            text-decoration: none;
+            margin-left: 25px;
+            font-size: 13px;
+        }
+
+        nav a:hover {
+            color: #f39a38;
+        }
+
+        .hero {
+            min-height: 570px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 80px 20px;
+            background:
+                radial-gradient(ellipse at center,
+                #25202a 0%, #090b10 65%);
+        }
+
+        .tag {
+            color: #f39a38;
+            letter-spacing: 5px;
+            font-size: 12px;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-size: clamp(42px, 8vw, 82px);
+            letter-spacing: 5px;
+            line-height: 1.1;
+        }
+
+        h1 span {
+            color: #f39a38;
+        }
+
+        .subtitle {
+            color: #aaa;
+            font-size: 18px;
+            margin-top: 25px;
+            max-width: 650px;
+        }
+
+        .button {
+            display: inline-block;
+            margin-top: 35px;
+            padding: 14px 28px;
+            background: #f39a38;
+            color: #111;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 3px;
+            transition: 0.2s;
+        }
+
+        .button:hover {
+            background: #ffc078;
+            transform: translateY(-2px);
+        }
+
+        section {
+            max-width: 950px;
+            margin: auto;
+            padding: 85px 25px;
+        }
+
+        h2 {
+            font-size: 30px;
+            margin-bottom: 20px;
+        }
+
+        h2 span {
+            color: #f39a38;
+        }
+
+        section p {
+            color: #aaa;
+            margin-bottom: 15px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-top: 30px;
+        }
+
+        .feature {
+            background: #12151d;
+            border: 1px solid #292e3a;
+            padding: 25px;
+            border-radius: 5px;
+        }
+
+        .feature h3 {
+            color: #f39a38;
+            margin-bottom: 10px;
+        }
+
+        .feature p {
+            font-size: 14px;
+        }
+
+        .download {
+            text-align: center;
+            background: #11141c;
+            border-top: 1px solid #292e3a;
+            border-bottom: 1px solid #292e3a;
+            max-width: none;
+        }
+
+        .download-content {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        footer {
+            text-align: center;
+            padding: 35px 15px;
+            color: #666;
+            font-size: 12px;
+        }
+
+        footer span {
+            color: #f39a38;
+        }
+
+        @media(max-width: 600px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            nav a {
+                margin: 0 8px;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <header>
-        <h1>D18 SCRIPT AGENT</h1>
-        <p>THE AI AGENT FOR CINEMATIC STORYTELLING</p>
-        <p>Developed by DAEDAL AI</p>
-    </header>
 
-    <main>
-        <section>
-            <h2>Your Local AI Screenwriting Assistant</h2>
-            <p>
-                D18 Script Agent is a Python-based AI assistant
-                designed to support screenwriters and filmmakers
-                in developing cinematic stories.
-            </p>
-            <p>
-                Powered by Ollama, it brings AI-assisted
-                screenwriting directly to your computer.
-            </p>
-        </section>
+<header>
+    <div class="brand">DAEDAL <span>AI</span></div>
 
-        <section>
-            <h2>Features</h2>
-            <ul>
-                <li>Local AI integration with Ollama</li>
-                <li>AI-assisted script development</li>
-                <li>Python desktop application</li>
-                <li>Tools for cinematic storytelling</li>
-            </ul>
-        </section>
+    <nav>
+        <a href="#about">ABOUT</a>
+        <a href="#features">FEATURES</a>
+        <a href="#download">DOWNLOAD</a>
+    </nav>
+</header>
 
-        <section>
-            <h2>Get D18 Script Agent</h2>
-            <p>
-                <a href="https://github.com/Danielix18/D18-Script-Agent">
-                    Explore the GitHub Repository
-                </a>
-            </p>
-            <p>
-                <a href="https://github.com/Danielix18/D18-Script-Agent/releases">
-                    Download and explore releases
-                </a>
-            </p>
-        </section>
-    </main>
+<main>
 
-    <footer>
-        <p>© 2026 DAEDAL AI</p>
-    </footer>
+    <div class="hero">
+        <div class="tag">DAEDAL AI PRESENTS</div>
+
+        <h1>D18 <span>SCRIPT</span><br>AGENT</h1>
+
+        <p class="subtitle">
+            THE AI AGENT FOR CINEMATIC STORYTELLING.
+            Your local AI-powered assistant for screenwriting
+            and creative development.
+        </p>
+
+        <a class="button"
+           href="https://github.com/Danielix18/D18-Script-Agent/releases">
+           GET D18 SCRIPT AGENT
+        </a>
+    </div>
+
+    <section id="about">
+        <h2>ABOUT <span>D18</span></h2>
+
+        <p>
+            D18 Script Agent is a desktop AI application
+            developed by DAEDAL AI, designed to assist
+            filmmakers and screenwriters in their creative
+            process.
+        </p>
+
+        <p>
+            Built with Python and powered by Ollama,
+            D18 brings local AI capabilities to cinematic
+            storytelling and script development.
+        </p>
+    </section>
+
+    <section id="features">
+        <h2>CORE <span>FEATURES</span></h2>
+
+        <div class="features">
+
+            <div class="feature">
+                <h3>LOCAL AI</h3>
+                <p>
+                    AI processing through Ollama on your
+                    own computer.
+                </p>
+            </div>
+
+            <div class="feature">
+                <h3>SCREENWRITING</h3>
+                <p>
+                    Assistance for developing and
+                    improving cinematic scripts.
+                </p>
+            </div>
+
+            <div class="feature">
+                <h3>PYTHON</h3>
+                <p>
+                    A desktop application developed
+                    with Python.
+                </p>
+            </div>
+
+            <div class="feature">
+                <h3>CREATIVE CONTROL</h3>
+                <p>
+                    Designed to support the filmmaker's
+                    creative decisions.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="download" id="download">
+        <div class="download-content">
+            <h2>START CREATING.</h2>
+
+            <p>
+                Discover D18 Script Agent and explore
+                its source code and official releases.
+            </p>
+
+            <a class="button"
+               href="https://github.com/Danielix18/D18-Script-Agent/releases">
+               DOWNLOAD ON GITHUB
+            </a>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <p>DEVELOPED BY <span>DAEDAL AI</span></p>
+    <p>© 2026 DAEDAL AI. ALL RIGHTS RESERVED.</p>
+    <p>D18 SCRIPT AGENT — V1.0.0</p>
+</footer>
+
 </body>
 </html>
