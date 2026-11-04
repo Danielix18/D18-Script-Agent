@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://danielix18.github.io/D18-Script-Agent/sitemap.xml
