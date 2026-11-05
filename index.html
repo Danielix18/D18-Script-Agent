@@ -2,1079 +2,1774 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>D18 Script Agent | DADEUS AI</title>
-  <meta name="description" content="D18 Script Agent — A local AI writing assistant for cinematic storytelling, developed by DADEUS AI.">
-  <meta name="keywords" content="D18 Script Agent, DADEUS AI, AI screenwriting, cinematic storytelling, Ollama, local AI">
-  <meta name="author" content="DADEUS AI">
-  <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#090909">
-  <meta property="og:title" content="D18 Script Agent | DADEUS AI">
-  <meta property="og:description" content="The AI Agent for Cinematic Storytelling.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://danielix18.github.io/D18-Script-Agent/">
-  <link rel="canonical" href="https://danielix18.github.io/D18-Script-Agent/">
-
-  <style>
-    :root {
-      --bg: #090909;
-      --surface: #111111;
-      --surface2: #171717;
-      --orange: #ff762b;
-      --orange-light: #ff9a52;
-      --white: #f4f1ed;
-      --muted: #999590;
-      --border: rgba(255,255,255,.10);
-      --max: 1180px;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-      scroll-padding-top: 90px;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--white);
-      font-family: Inter, Arial, Helvetica, sans-serif;
-      line-height: 1.65;
-      overflow-x: hidden;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button {
-      font: inherit;
-    }
-
-    ::selection {
-      background: var(--orange);
-      color: #090909;
-    }
-
-    .container {
-      width: min(var(--max), 88%);
-      margin: auto;
-    }
-
-    .noise {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 20;
-      opacity: .035;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
-    }
-
-    .topbar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 50;
-      background: rgba(9,9,9,.78);
-      backdrop-filter: blur(18px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    nav {
-      min-height: 76px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 25px;
-    }
-
-    .brand {
-      font-size: 21px;
-      font-weight: 900;
-      letter-spacing: 2px;
-    }
-
-    .brand span {
-      color: var(--orange);
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 30px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .nav-links a:hover {
-      color: var(--orange);
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .language {
-      border: 1px solid var(--border);
-      border-radius: 30px;
-      padding: 7px 12px;
-      background: transparent;
-      color: var(--muted);
-      font-size: 11px;
-      cursor: pointer;
-    }
-
-    .language span.active {
-      color: var(--orange);
-      font-weight: 800;
-    }
-
-    .hero {
-      min-height: 850px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      padding: 150px 0 100px;
-      overflow: hidden;
-      background:
-        radial-gradient(ellipse at 75% 40%, rgba(255,118,43,.13), transparent 42%),
-        radial-gradient(ellipse at 15% 80%, rgba(255,118,43,.055), transparent 40%);
-    }
-
-    .hero-grid {
-      position: absolute;
-      inset: 0;
-      opacity: .12;
-      background-image:
-        linear-gradient(rgba(255,255,255,.07) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.07) 1px, transparent 1px);
-      background-size: 80px 80px;
-      mask-image: linear-gradient(to bottom, black, transparent 90%);
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      max-width: 900px;
-    }
-
-    .eyebrow {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: var(--orange);
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-    }
-
-    .eyebrow::before {
-      content: "";
-      width: 28px;
-      height: 1px;
-      background: var(--orange);
-    }
-
-    h1 {
-      font-size: clamp(55px, 9vw, 112px);
-      line-height: .98;
-      letter-spacing: -6px;
-      margin: 30px 0;
-      font-weight: 900;
-    }
-
-    h1 .orange {
-      color: var(--orange);
-    }
-
-    .hero-description {
-      max-width: 570px;
-      color: var(--muted);
-      font-size: clamp(16px, 2vw, 19px);
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      margin-top: 36px;
-    }
-
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      padding: 14px 23px;
-      border: 1px solid var(--border);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      transition: .25s ease;
-    }
-
-    .button.primary {
-      color: #111;
-      background: var(--orange);
-      border-color: var(--orange);
-    }
-
-    .button.primary:hover {
-      background: var(--orange-light);
-      transform: translateY(-3px);
-      box-shadow: 0 10px 35px rgba(255,118,43,.18);
-    }
-
-    .button.secondary:hover {
-      border-color: var(--orange);
-      color: var(--orange);
-      transform: translateY(-3px);
-    }
-
-    .hero-meta {
-      display: flex;
-      gap: 25px;
-      flex-wrap: wrap;
-      margin-top: 55px;
-      color: #777;
-      font-size: 10px;
-      letter-spacing: 2px;
-    }
-
-    .hero-meta span::before {
-      content: "•";
-      color: var(--orange);
-      margin-right: 9px;
-    }
-
-    .hero-orbit {
-      position: absolute;
-      width: 550px;
-      height: 550px;
-      right: -110px;
-      top: 50%;
-      transform: translateY(-50%);
-      border: 1px solid rgba(255,118,43,.13);
-      border-radius: 50%;
-      box-shadow:
-        0 0 0 65px rgba(255,118,43,.025),
-        0 0 0 130px rgba(255,118,43,.018);
-    }
-
-    .hero-orbit::before,
-    .hero-orbit::after {
-      content: "";
-      position: absolute;
-      border: 1px solid rgba(255,255,255,.07);
-      border-radius: 50%;
-      inset: 70px;
-    }
-
-    .hero-orbit::after {
-      inset: 145px;
-      border-color: rgba(255,118,43,.17);
-    }
-
-    .orbit-core {
-      position: absolute;
-      width: 120px;
-      height: 120px;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%,-50%);
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,118,43,.3), rgba(255,118,43,.02) 70%);
-      box-shadow: 0 0 90px rgba(255,118,43,.17);
-    }
-
-    .section {
-      padding: 125px 0;
-      border-top: 1px solid var(--border);
-      position: relative;
-    }
-
-    .section-label {
-      color: var(--orange);
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-    }
-
-    h2 {
-      font-size: clamp(34px, 5vw, 58px);
-      line-height: 1.08;
-      letter-spacing: -2px;
-      margin: 18px 0 25px;
-      font-weight: 800;
-    }
-
-    .section-description {
-      max-width: 650px;
-      color: var(--muted);
-      font-size: 16px;
-    }
-
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap: 80px;
-      align-items: center;
-    }
-
-    .product-card {
-      background: linear-gradient(145deg, #191919, #0e0e0e);
-      border: 1px solid var(--border);
-      padding: 30px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .product-card::after {
-      content: "";
-      position: absolute;
-      width: 220px;
-      height: 220px;
-      background: rgba(255,118,43,.09);
-      filter: blur(80px);
-      right: -80px;
-      bottom: -100px;
-    }
-
-    .product-card .tag {
-      color: var(--orange);
-      font-size: 10px;
-      letter-spacing: 2px;
-      font-weight: 800;
-    }
-
-    .product-card h3 {
-      margin: 20px 0;
-      font-size: 27px;
-    }
-
-    .spec {
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-      padding: 13px 0;
-      border-top: 1px solid var(--border);
-      font-size: 12px;
-    }
-
-    .spec span:first-child {
-      color: var(--muted);
-    }
-
-    .spec span:last-child {
-      text-align: right;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-      margin-top: 55px;
-    }
-
-    .feature {
-      min-height: 235px;
-      padding: 30px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      transition: .3s ease;
-    }
-
-    .feature:hover {
-      background: var(--surface2);
-      border-color: rgba(255,118,43,.55);
-      transform: translateY(-6px);
-    }
-
-    .feature-number {
-      color: var(--orange);
-      font-size: 11px;
-      letter-spacing: 2px;
-    }
-
-    .feature h3 {
-      font-size: 19px;
-      margin: 27px 0 12px;
-    }
-
-    .feature p {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .workflow {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 35px;
-      margin-top: 55px;
-    }
-
-    .workflow-step {
-      border-top: 1px solid var(--orange);
-      padding-top: 22px;
-    }
-
-    .workflow-step .number {
-      color: var(--orange);
-      font-size: 12px;
-      letter-spacing: 2px;
-    }
-
-    .workflow-step h3 {
-      margin: 15px 0 10px;
-      font-size: 21px;
-    }
-
-    .workflow-step p {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .technology {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 35px;
-    }
-
-    .tech {
-      padding: 10px 17px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: #c9c5c0;
-      font-size: 12px;
-    }
-
-    .privacy-panel {
-      border: 1px solid var(--border);
-      background: linear-gradient(110deg, #151515, #0b0b0b);
-      padding: 55px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 40px;
-    }
-
-    .privacy-panel p {
-      color: var(--muted);
-      max-width: 650px;
-      font-size: 14px;
-    }
-
-    .download {
-      text-align: center;
-      padding: 100px 30px;
-      background:
-        radial-gradient(ellipse at 50% 100%, rgba(255,118,43,.14), transparent 60%),
-        #111;
-      border: 1px solid var(--border);
-    }
-
-    .download h2 {
-      max-width: 750px;
-      margin: 20px auto;
-    }
-
-    .download p {
-      color: var(--muted);
-      max-width: 550px;
-      margin: auto;
-    }
-
-    .download .hero-actions {
-      justify-content: center;
-    }
-
-    .faq {
-      max-width: 850px;
-      margin-top: 40px;
-    }
-
-    details {
-      border-bottom: 1px solid var(--border);
-      padding: 22px 0;
-    }
-
-    summary {
-      cursor: pointer;
-      font-weight: 700;
-      list-style: none;
-    }
-
-    summary::after {
-      content: "+";
-      float: right;
-      color: var(--orange);
-      font-size: 20px;
-    }
-
-    details[open] summary::after {
-      content: "−";
-    }
-
-    details p {
-      color: var(--muted);
-      font-size: 14px;
-      padding-top: 15px;
-      max-width: 700px;
-    }
-
-    footer {
-      padding: 45px 0;
-      border-top: 1px solid var(--border);
-      color: #777;
-      font-size: 11px;
-    }
-
-    .footer-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    footer strong {
-      color: var(--orange);
-      letter-spacing: 2px;
-    }
-
-    .reveal {
-      opacity: 0;
-      transform: translateY(35px);
-    }
-
-    @media(max-width: 850px) {
-      .nav-links {
-        display: none;
-      }
-
-      .hero {
-        min-height: 760px;
-      }
-
-      .hero-orbit {
-        opacity: .45;
-        right: -330px;
-      }
-
-      .about-grid {
-        grid-template-columns: 1fr;
-        gap: 40px;
-      }
-
-      .features-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .privacy-panel {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-    }
-
-    @media(max-width: 560px) {
-      h1 {
-        letter-spacing: -3px;
-      }
-
-      .hero {
-        min-height: 720px;
-      }
-
-      .features-grid,
-      .workflow {
-        grid-template-columns: 1fr;
-      }
-
-      .section {
-        padding: 85px 0;
-      }
-
-      .privacy-panel {
-        padding: 30px;
-      }
-
-      .hero-meta {
-        gap: 12px;
-      }
-
-      .button {
-        width: 100%;
-      }
-    }
-
-    @media(prefers-reduced-motion: reduce) {
-      html {
-        scroll-behavior: auto;
-      }
-
-      *, *::before, *::after {
-        animation-duration: .01ms !important;
-        transition-duration: .01ms !important;
-      }
-
-      .reveal {
-        opacity: 1;
-        transform: none;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>D18 Script Agent — DADEUS AI</title>
+<meta name="description" content="D18 Script Agent. A local AI writing assistant for cinematic storytelling, developed by DADEUS AI.">
+<meta name="author" content="DADEUS AI">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#090909">
+<link rel="canonical" href="https://danielix18.github.io/D18-Script-Agent/">
+
+<meta property="og:title" content="D18 Script Agent — DADEUS AI">
+<meta property="og:description" content="Your stories. Your vision. An AI agent for cinematic storytelling.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://danielix18.github.io/D18-Script-Agent/">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg:#090909;
+  --bg2:#101010;
+  --panel:#151515;
+  --panel2:#1b1b1b;
+  --orange:#ff762b;
+  --orange2:#ff9a5b;
+  --white:#f5f2ee;
+  --muted:#99948e;
+  --line:rgba(255,255,255,.11);
+  --max:1180px;
+}
+
+* {box-sizing:border-box;margin:0;padding:0}
+
+html {
+  scroll-behavior:smooth;
+  scroll-padding-top:85px;
+}
+
+body {
+  background:var(--bg);
+  color:var(--white);
+  font-family:Manrope,Arial,sans-serif;
+  overflow-x:hidden;
+  line-height:1.65;
+}
+
+body.menu-open {overflow:hidden}
+
+a {color:inherit;text-decoration:none}
+button {font:inherit}
+button,a {-webkit-tap-highlight-color:transparent}
+::selection {background:var(--orange);color:#111}
+
+.container {
+  width:min(var(--max),88%);
+  margin:auto;
+}
+
+.mono {
+  font-family:"DM Mono",monospace;
+}
+
+.noise {
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:100;
+  opacity:.025;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+}
+
+.progress {
+  position:fixed;
+  top:0;
+  left:0;
+  width:0;
+  height:2px;
+  background:var(--orange);
+  z-index:120;
+}
+
+.header {
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  z-index:90;
+  background:rgba(9,9,9,.78);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--line);
+}
+
+.nav {
+  min-height:76px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:25px;
+}
+
+.logo {
+  font-size:23px;
+  font-weight:800;
+  letter-spacing:2px;
+}
+
+.logo span {color:var(--orange)}
+
+.nav-links {
+  display:flex;
+  gap:27px;
+  align-items:center;
+}
+
+.nav-links a {
+  font-size:11px;
+  color:var(--muted);
+  transition:.25s;
+}
+
+.nav-links a:hover {color:var(--orange)}
+
+.nav-actions {
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+.lang-btn {
+  background:none;
+  border:1px solid var(--line);
+  border-radius:30px;
+  color:var(--muted);
+  padding:8px 12px;
+  cursor:pointer;
+  font-size:10px;
+}
+
+.lang-btn .selected {color:var(--orange);font-weight:800}
+
+.menu-btn {
+  display:none;
+  background:none;
+  color:white;
+  border:0;
+  font-size:23px;
+  cursor:pointer;
+}
+
+.button {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  padding:15px 23px;
+  border:1px solid var(--line);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:1.5px;
+  transition:transform .25s,border-color .25s,background .25s;
+  cursor:pointer;
+}
+
+.button:hover {transform:translateY(-3px)}
+
+.button.primary {
+  background:var(--orange);
+  border-color:var(--orange);
+  color:#111;
+}
+
+.button.primary:hover {
+  background:var(--orange2);
+  box-shadow:0 10px 40px rgba(255,118,43,.17);
+}
+
+.button.secondary:hover {
+  border-color:var(--orange);
+  color:var(--orange);
+}
+
+.eyebrow {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  color:var(--orange);
+  font:11px "DM Mono",monospace;
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+
+.eyebrow:before {
+  content:"";
+  width:27px;
+  height:1px;
+  background:var(--orange);
+}
+
+.hero {
+  min-height:880px;
+  position:relative;
+  display:flex;
+  align-items:center;
+  overflow:hidden;
+  padding:150px 0 100px;
+  background:
+    radial-gradient(ellipse at 76% 45%,rgba(255,118,43,.14),transparent 37%),
+    radial-gradient(ellipse at 10% 90%,rgba(255,118,43,.06),transparent 40%);
+}
+
+.hero-grid {
+  position:absolute;
+  inset:0;
+  opacity:.12;
+  background-image:
+    linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);
+  background-size:75px 75px;
+  mask-image:linear-gradient(to bottom,black,transparent 90%);
+}
+
+.hero-content {position:relative;z-index:3}
+
+.hero h1 {
+  font-size:clamp(55px,9.5vw,120px);
+  line-height:.94;
+  letter-spacing:-7px;
+  font-weight:800;
+  margin:32px 0;
+}
+
+.orange {color:var(--orange)}
+
+.hero-description {
+  max-width:590px;
+  color:var(--muted);
+  font-size:17px;
+}
+
+.hero-buttons {
+  display:flex;
+  gap:13px;
+  flex-wrap:wrap;
+  margin-top:35px;
+}
+
+.hero-meta {
+  display:flex;
+  flex-wrap:wrap;
+  gap:25px;
+  margin-top:58px;
+  color:#777;
+  font:10px "DM Mono",monospace;
+  letter-spacing:1.5px;
+}
+
+.hero-meta span:before {
+  content:"/";
+  color:var(--orange);
+  margin-right:9px;
+}
+
+.hero-orbit {
+  position:absolute;
+  width:570px;
+  height:570px;
+  right:-100px;
+  top:50%;
+  transform:translateY(-50%);
+  border:1px solid rgba(255,118,43,.17);
+  border-radius:50%;
+  box-shadow:0 0 0 70px rgba(255,118,43,.025),0 0 0 140px rgba(255,118,43,.015);
+}
+
+.hero-orbit:before,.hero-orbit:after {
+  content:"";
+  position:absolute;
+  inset:70px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:50%;
+}
+
+.hero-orbit:after {
+  inset:150px;
+  border-color:rgba(255,118,43,.2);
+}
+
+.orbit-core {
+  position:absolute;
+  width:125px;
+  height:125px;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,118,43,.3),transparent 70%);
+  box-shadow:0 0 90px rgba(255,118,43,.18);
+}
+
+.orbit-dot {
+  position:absolute;
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:var(--orange);
+  top:50px;
+  left:50%;
+  box-shadow:0 0 20px var(--orange);
+}
+
+.section {
+  padding:125px 0;
+  border-top:1px solid var(--line);
+  position:relative;
+}
+
+.section-label {
+  color:var(--orange);
+  font:10px "DM Mono",monospace;
+  letter-spacing:2.5px;
+  text-transform:uppercase;
+}
+
+h2 {
+  font-size:clamp(36px,5.5vw,65px);
+  line-height:1.07;
+  letter-spacing:-3px;
+  margin:20px 0;
+  font-weight:800;
+}
+
+.section-description {
+  max-width:680px;
+  color:var(--muted);
+  font-size:15px;
+}
+
+.about-grid {
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  align-items:center;
+  gap:70px;
+}
+
+.info-card {
+  padding:32px;
+  border:1px solid var(--line);
+  background:linear-gradient(145deg,#191919,#0d0d0d);
+  position:relative;
+  overflow:hidden;
+}
+
+.info-card:after {
+  content:"";
+  position:absolute;
+  width:200px;
+  height:200px;
+  right:-100px;
+  bottom:-100px;
+  background:rgba(255,118,43,.12);
+  filter:blur(60px);
+}
+
+.card-label {
+  color:var(--orange);
+  font:10px "DM Mono",monospace;
+  letter-spacing:2px;
+}
+
+.info-card h3 {font-size:26px;margin:20px 0}
+
+.spec {
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  border-top:1px solid var(--line);
+  padding:13px 0;
+  font-size:12px;
+}
+
+.spec span:first-child {color:var(--muted)}
+.spec span:last-child {text-align:right}
+
+.marquee {
+  overflow:hidden;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  padding:22px 0;
+  background:#0e0e0e;
+}
+
+.marquee-track {
+  display:flex;
+  width:max-content;
+  gap:50px;
+  animation:marquee 28s linear infinite;
+  color:#888;
+  font:11px "DM Mono",monospace;
+  letter-spacing:3px;
+}
+
+.marquee-track span {white-space:nowrap}
+.marquee-track b {color:var(--orange);font-weight:400}
+
+@keyframes marquee {
+  to {transform:translateX(-50%)}
+}
+
+/* INSIDE D18 */
+
+.inside-heading {
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  gap:35px;
+  margin-bottom:50px;
+}
+
+.concept-label {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid rgba(255,118,43,.3);
+  padding:8px 11px;
+  color:var(--orange);
+  font:9px "DM Mono",monospace;
+  letter-spacing:1px;
+}
+
+.concept-label:before {
+  content:"";
+  width:6px;
+  height:6px;
+  background:var(--orange);
+  border-radius:50%;
+}
+
+.workspace {
+  background:#101010;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:9px;
+  overflow:hidden;
+  box-shadow:0 35px 100px rgba(0,0,0,.5);
+}
+
+.workspace-top {
+  min-height:48px;
+  padding:0 17px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#191919;
+  border-bottom:1px solid var(--line);
+}
+
+.window-dots {display:flex;gap:6px}
+.window-dots i {width:7px;height:7px;border-radius:50%;background:#555}
+.window-dots i:first-child {background:var(--orange)}
+
+.workspace-name {
+  color:#aaa;
+  font:9px "DM Mono",monospace;
+  letter-spacing:1px;
+}
+
+.workspace-body {
+  display:grid;
+  grid-template-columns:210px 1fr;
+  min-height:370px;
+}
+
+.workspace-sidebar {
+  padding:22px 15px;
+  border-right:1px solid var(--line);
+  background:#131313;
+}
+
+.workspace-sidebar small {
+  color:#777;
+  font:9px "DM Mono",monospace;
+  letter-spacing:1px;
+}
+
+.workspace-item {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 10px;
+  margin-top:7px;
+  border-radius:4px;
+  color:#aaa;
+  font-size:11px;
+}
+
+.workspace-item.active {
+  background:rgba(255,118,43,.1);
+  color:var(--orange);
+}
+
+.workspace-item i {
+  width:7px;height:7px;border:1px solid currentColor;border-radius:2px;
+}
+
+.workspace-main {
+  padding:28px;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+.workspace-main h3 {font-size:19px}
+
+.workspace-main p {
+  color:#888;
+  font-size:11px;
+}
+
+.workspace-block {
+  border:1px solid var(--line);
+  background:#171717;
+  border-radius:5px;
+  padding:17px;
+}
+
+.workspace-block .block-heading {
+  display:flex;
+  justify-content:space-between;
+  color:var(--orange);
+  font:9px "DM Mono",monospace;
+  letter-spacing:1px;
+  margin-bottom:12px;
+}
+
+.workspace-line {
+  height:5px;
+  border-radius:5px;
+  background:#303030;
+  margin:9px 0;
+}
+
+.workspace-line.short {width:55%}
+.workspace-line.medium {width:75%}
+
+.workspace-footer {
+  border-top:1px solid var(--line);
+  padding:12px 18px;
+  display:flex;
+  justify-content:space-between;
+  color:#777;
+  font:9px "DM Mono",monospace;
+}
+
+.inside-caption {
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  margin-top:18px;
+  color:#777;
+  font-size:11px;
+}
+
+/* DEMO */
+
+.demo-layout {
+  display:grid;
+  grid-template-columns:.75fr 1.25fr;
+  gap:50px;
+  align-items:center;
+}
+
+.demo-controls {
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:30px;
+}
+
+.demo-tab {
+  text-align:left;
+  padding:17px;
+  border:1px solid var(--line);
+  background:transparent;
+  color:#aaa;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.demo-tab:hover,.demo-tab.active {
+  border-color:var(--orange);
+  background:rgba(255,118,43,.07);
+  color:white;
+}
+
+.demo-tab strong {
+  display:block;
+  font-size:12px;
+  margin-bottom:4px;
+}
+
+.demo-tab small {color:#777;font-size:10px}
+
+.demo-screen {
+  background:#121212;
+  border:1px solid var(--line);
+  min-height:370px;
+  padding:27px;
+  position:relative;
+}
+
+.demo-screen-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  border-bottom:1px solid var(--line);
+  padding-bottom:17px;
+  margin-bottom:24px;
+}
+
+.demo-screen-header span {
+  color:var(--orange);
+  font:9px "DM Mono",monospace;
+  letter-spacing:1px;
+}
+
+.demo-screen h3 {font-size:22px;margin-bottom:12px}
+.demo-screen p {font-size:13px;color:var(--muted);max-width:520px}
+
+.demo-result {
+  margin-top:25px;
+  border-left:2px solid var(--orange);
+  padding:15px 18px;
+  background:#191919;
+  color:#ccc;
+  font-size:12px;
+  min-height:90px;
+}
+
+.demo-note {
+  margin-top:17px;
+  color:#777;
+  font:9px "DM Mono",monospace;
+  letter-spacing:.5px;
+}
+
+/* FEATURES */
+
+.features-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin-top:55px;
+}
+
+.feature {
+  min-height:240px;
+  padding:28px;
+  border:1px solid var(--line);
+  background:#111;
+  transition:.3s;
+}
+
+.feature:hover {
+  transform:translateY(-6px);
+  border-color:rgba(255,118,43,.55);
+  background:#171717;
+}
+
+.feature-number {
+  color:var(--orange);
+  font:10px "DM Mono",monospace;
+}
+
+.feature-icon {
+  font-size:23px;
+  color:var(--orange);
+  margin-top:22px;
+}
+
+.feature h3 {font-size:18px;margin:12px 0}
+.feature p {font-size:12px;color:var(--muted)}
+
+/* PROCESS */
+
+.process-list {margin-top:55px}
+
+.process-item {
+  display:grid;
+  grid-template-columns:90px 1fr 1fr;
+  align-items:center;
+  gap:30px;
+  padding:30px 0;
+  border-top:1px solid var(--line);
+}
+
+.process-number {
+  color:var(--orange);
+  font:13px "DM Mono",monospace;
+}
+
+.process-item h3 {font-size:22px}
+.process-item p {color:var(--muted);font-size:13px}
+
+/* TECH */
+
+.tech-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:50px;
+  align-items:center;
+  margin-top:45px;
+}
+
+.architecture {
+  border:1px solid var(--line);
+  padding:30px;
+  background:#111;
+}
+
+.arch-node {
+  text-align:center;
+  padding:17px;
+  border:1px solid var(--line);
+  background:#181818;
+  font-size:12px;
+}
+
+.arch-node strong {color:white}
+.arch-node small {
+  display:block;
+  color:#888;
+  margin-top:5px;
+  font-size:10px;
+}
+
+.arch-arrow {
+  text-align:center;
+  padding:10px;
+  color:var(--orange);
+  font:12px "DM Mono",monospace;
+}
+
+.tech-tags {
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+  margin-top:25px;
+}
+
+.tech-tag {
+  padding:9px 13px;
+  background:#191919;
+  border:1px solid var(--line);
+  color:#bbb;
+  font:10px "DM Mono",monospace;
+}
+
+.privacy-box {
+  margin-top:45px;
+  border:1px solid var(--line);
+  background:linear-gradient(110deg,#171717,#0c0c0c);
+  padding:35px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:30px;
+}
+
+.privacy-box p {color:var(--muted);font-size:13px;max-width:650px}
+
+/* BRAND */
+
+.brand-section {
+  min-height:510px;
+  display:flex;
+  align-items:center;
+  background:
+    radial-gradient(ellipse at 80% 50%,rgba(255,118,43,.12),transparent 40%);
+}
+
+.brand-statement {
+  font-size:clamp(40px,7vw,88px);
+  line-height:1.05;
+  letter-spacing:-5px;
+  font-weight:800;
+  max-width:950px;
+}
+
+.brand-statement span {color:var(--orange)}
+
+/* DOWNLOAD */
+
+.download-panel {
+  text-align:center;
+  padding:100px 30px;
+  border:1px solid var(--line);
+  background:
+    radial-gradient(ellipse at 50% 100%,rgba(255,118,43,.15),transparent 60%),
+    #111;
+}
+
+.download-panel h2 {max-width:750px;margin:20px auto}
+.download-panel p {max-width:550px;margin:auto;color:var(--muted);font-size:14px}
+.download-panel .hero-buttons {justify-content:center}
+
+/* FAQ */
+
+.faq {max-width:850px;margin-top:40px}
+
+details {
+  border-bottom:1px solid var(--line);
+  padding:22px 0;
+}
+
+summary {
+  list-style:none;
+  cursor:pointer;
+  font-weight:700;
+  font-size:14px;
+}
+
+summary::-webkit-details-marker {display:none}
+
+summary:after {
+  content:"+";
+  float:right;
+  color:var(--orange);
+  font-size:20px;
+}
+
+details[open] summary:after {content:"−"}
+
+details p {
+  color:var(--muted);
+  font-size:13px;
+  padding-top:15px;
+  max-width:700px;
+}
+
+footer {
+  padding:45px 0;
+  border-top:1px solid var(--line);
+  color:#777;
+  font-size:11px;
+}
+
+.footer-inner {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:20px;
+}
+
+.footer-brand {
+  color:var(--orange);
+  font-weight:800;
+  letter-spacing:2px;
+}
+
+.reveal {
+  opacity:0;
+  transform:translateY(35px);
+}
+
+@media(max-width:900px) {
+  .nav-links {gap:13px}
+  .nav-links a {font-size:10px}
+  .hero-orbit {right:-330px;opacity:.5}
+  .about-grid,.demo-layout,.tech-grid {grid-template-columns:1fr}
+  .features-grid {grid-template-columns:repeat(2,1fr)}
+  .inside-heading {align-items:flex-start;flex-direction:column}
+  .process-item {grid-template-columns:55px 1fr}
+  .process-item p {grid-column:2}
+}
+
+@media(max-width:650px) {
+  .nav {min-height:68px}
+  .nav-links {
+    display:none;
+    position:fixed;
+    inset:68px 0 0;
+    background:#090909;
+    padding:35px 7%;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:25px;
+  }
+  .nav-links.open {display:flex}
+  .nav-links a {font-size:17px}
+  .menu-btn {display:block}
+  .hero {min-height:760px;padding-top:130px}
+  .hero h1 {font-size:clamp(48px,13vw,75px);letter-spacing:-4px}
+  .hero-description {font-size:14px}
+  .hero-orbit {right:-430px}
+  .hero-buttons {flex-direction:column;align-items:stretch}
+  .button {width:100%}
+  .section {padding:85px 0}
+  h2 {letter-spacing:-2px}
+  .features-grid {grid-template-columns:1fr}
+  .workspace-body {grid-template-columns:1fr}
+  .workspace-sidebar {display:none}
+  .workspace-main {padding:17px}
+  .workspace-footer {font-size:8px}
+  .inside-caption {flex-direction:column}
+  .demo-screen {padding:19px;min-height:390px}
+  .process-item {gap:12px}
+  .process-item h3 {font-size:17px}
+  .privacy-box {flex-direction:column;align-items:flex-start;padding:25px}
+  .brand-statement {letter-spacing:-2px}
+  .download-panel {padding:65px 20px}
+  .footer-inner {flex-direction:column;align-items:flex-start}
+}
+
+@media(prefers-reduced-motion:reduce) {
+  html {scroll-behavior:auto}
+  *,*::before,*::after {
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+  }
+  .reveal {opacity:1;transform:none}
+}
+</style>
 </head>
 
 <body>
-  <div class="noise"></div>
 
-  <div class="topbar">
-    <nav class="container">
-      <a class="brand" href="#">D18<span>.</span></a>
+<div class="noise"></div>
+<div class="progress" id="progress"></div>
 
-      <div class="nav-links">
-        <a href="#about" data-en="About" data-es="Proyecto">About</a>
-        <a href="#features" data-en="Features" data-es="Funciones">Features</a>
-        <a href="#technology" data-en="Technology" data-es="Tecnología">Technology</a>
-        <a href="#download" data-en="Download" data-es="Descargar">Download</a>
-      </div>
+<header class="header">
+  <nav class="nav container">
+    <a href="#" class="logo">D18<span>.</span></a>
 
-      <div class="nav-right">
-        <button class="language" id="languageToggle" aria-label="Change language">
-          <span id="enOption" class="active">EN</span> / <span id="esOption">ES</span>
-        </button>
-      </div>
-    </nav>
+    <div class="nav-links" id="navLinks">
+      <a href="#about" data-en="About" data-es="Proyecto">About</a>
+      <a href="#inside" data-en="Inside D18" data-es="Conoce D18">Inside D18</a>
+      <a href="#features" data-en="Features" data-es="Funciones">Features</a>
+      <a href="#technology" data-en="Technology" data-es="Tecnología">Technology</a>
+      <a href="#download" data-en="Download" data-es="Descargar">Download</a>
+    </div>
+
+    <div class="nav-actions">
+      <button class="lang-btn" id="languageToggle" aria-label="Change language">
+        <span id="enOption" class="selected">EN</span> / <span id="esOption">ES</span>
+      </button>
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+    </div>
+  </nav>
+</header>
+
+<main>
+
+<!-- HERO -->
+
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-orbit" id="heroOrbit">
+    <div class="orbit-core"></div>
+    <div class="orbit-dot"></div>
   </div>
 
-  <header class="hero">
-    <div class="hero-grid"></div>
-    <div class="hero-orbit"><div class="orbit-core"></div></div>
+  <div class="container hero-content">
+    <div class="eyebrow" data-en="A DADEUS AI PRODUCT" data-es="UN PRODUCTO DE DADEUS AI">
+      A DADEUS AI PRODUCT
+    </div>
 
-    <div class="container hero-content">
-      <div class="eyebrow" data-en="Developed by DADEUS AI" data-es="Desarrollado por DADEUS AI">
-        Developed by DADEUS AI
+    <h1>
+      <span data-en="YOUR STORIES." data-es="TUS HISTORIAS.">YOUR STORIES.</span><br>
+      <span class="orange" data-en="YOUR VISION." data-es="TU VISIÓN.">YOUR VISION.</span>
+    </h1>
+
+    <p class="hero-description"
+       data-en="Meet D18 Script Agent. A local AI writing assistant designed to support screenwriters and filmmakers throughout the creative process."
+       data-es="Conoce D18 Script Agent. Un asistente de escritura con IA local diseñado para apoyar a guionistas y cineastas durante el proceso creativo.">
+      Meet D18 Script Agent. A local AI writing assistant designed to support screenwriters and filmmakers throughout the creative process.
+    </p>
+
+    <div class="hero-buttons">
+      <a class="button primary" href="https://github.com/Danielix18/D18-Script-Agent/releases"
+         data-en="DOWNLOAD D18 ↗" data-es="DESCARGAR D18 ↗">DOWNLOAD D18 ↗</a>
+      <a class="button secondary" href="#inside"
+         data-en="EXPLORE THE EXPERIENCE ↓" data-es="DESCUBRIR D18 ↓">EXPLORE THE EXPERIENCE ↓</a>
+    </div>
+
+    <div class="hero-meta">
+      <span>VERSION 1.0.0</span>
+      <span>WINDOWS</span>
+      <span>LOCAL AI</span>
+      <span>DADEUS AI</span>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+
+<div class="marquee">
+  <div class="marquee-track">
+    <span>CINEMATIC STORYTELLING <b>✳</b></span>
+    <span>LOCAL ARTIFICIAL INTELLIGENCE <b>✳</b></span>
+    <span>CREATIVE TECHNOLOGY <b>✳</b></span>
+    <span>SCREENWRITING <b>✳</b></span>
+    <span>DADEUS AI <b>✳</b></span>
+    <span>CINEMATIC STORYTELLING <b>✳</b></span>
+    <span>LOCAL ARTIFICIAL INTELLIGENCE <b>✳</b></span>
+    <span>CREATIVE TECHNOLOGY <b>✳</b></span>
+    <span>SCREENWRITING <b>✳</b></span>
+    <span>DADEUS AI <b>✳</b></span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+
+<section class="section" id="about">
+  <div class="container about-grid">
+    <div class="reveal">
+      <div class="section-label" data-en="01 / THE PROJECT" data-es="01 / EL PROYECTO">01 / THE PROJECT</div>
+
+      <h2 data-en="Technology meets the art of cinema."
+          data-es="La tecnología se encuentra con el arte del cine.">
+        Technology meets the art of cinema.
+      </h2>
+
+      <p class="section-description"
+         data-en="D18 Script Agent is a desktop AI writing assistant developed by DADEUS AI. It is designed to support the creative development of cinematic stories, screenplays and film projects. Its local-first architecture connects to Ollama to run a language model on your own computer."
+         data-es="D18 Script Agent es un asistente de escritura con IA para escritorio desarrollado por DADEUS AI. Está diseñado para apoyar el desarrollo creativo de historias cinematográficas, guiones y proyectos audiovisuales. Su arquitectura local se conecta a Ollama para ejecutar un modelo de lenguaje en tu propio ordenador.">
+        D18 Script Agent is a desktop AI writing assistant developed by DADEUS AI. It is designed to support the creative development of cinematic stories, screenplays and film projects.
+      </p>
+    </div>
+
+    <div class="info-card reveal">
+      <div class="card-label">DADEUS AI / PRODUCT 001</div>
+      <h3>D18 Script Agent</h3>
+      <div class="spec"><span>Developer</span><span>DADEUS AI</span></div>
+      <div class="spec"><span>Version</span><span>1.0.0</span></div>
+      <div class="spec"><span>Platform</span><span>Windows</span></div>
+      <div class="spec"><span>Interface</span><span>Python / Tkinter</span></div>
+      <div class="spec"><span>AI engine</span><span>Ollama</span></div>
+      <div class="spec"><span>Model</span><span>Llama 3.1 8B</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- INSIDE D18 -->
+
+<section class="section" id="inside">
+  <div class="container">
+    <div class="inside-heading reveal">
+      <div>
+        <div class="section-label" data-en="02 / INSIDE D18" data-es="02 / DENTRO DE D18">02 / INSIDE D18</div>
+        <h2 data-en="A workspace for your stories."
+            data-es="Un espacio para tus historias.">A workspace for your stories.</h2>
+        <p class="section-description"
+           data-en="Explore the concepts behind the D18 workflow. This is an illustrative diagram, not a screenshot of the application."
+           data-es="Descubre los conceptos del flujo de trabajo de D18. Este es un diagrama ilustrativo, no una captura de la aplicación.">
+          Explore the concepts behind the D18 workflow.
+        </p>
+      </div>
+      <div class="concept-label"
+           data-en="ILLUSTRATIVE PRODUCT DIAGRAM"
+           data-es="DIAGRAMA ILUSTRATIVO DEL PRODUCTO">
+        ILLUSTRATIVE PRODUCT DIAGRAM
+      </div>
+    </div>
+
+    <div class="workspace reveal">
+      <div class="workspace-top">
+        <div class="window-dots"><i></i><i></i><i></i></div>
+        <div class="workspace-name">D18 SCRIPT AGENT / WORKSPACE CONCEPT</div>
+        <div class="workspace-name">V1.0.0</div>
       </div>
 
-      <h1>
-        <span data-en="YOUR STORIES." data-es="TUS HISTORIAS.">YOUR STORIES.</span><br>
-        <span class="orange" data-en="YOUR VISION." data-es="TU VISIÓN.">YOUR VISION.</span>
-      </h1>
+      <div class="workspace-body">
+        <aside class="workspace-sidebar">
+          <small data-en="PROJECT STRUCTURE" data-es="ESTRUCTURA DEL PROYECTO">PROJECT STRUCTURE</small>
+          <div class="workspace-item active"><i></i><span data-en="Original material" data-es="Material original">Original material</span></div>
+          <div class="workspace-item"><i></i><span data-en="Project instructions" data-es="Instrucciones">Project instructions</span></div>
+          <div class="workspace-item"><i></i><span data-en="Script versions" data-es="Versiones del guion">Script versions</span></div>
+        </aside>
 
-      <p class="hero-description"
-         data-en="Meet D18 Script Agent. A local AI writing assistant designed to support screenwriters and filmmakers throughout the creative process."
-         data-es="Conoce D18 Script Agent. Un asistente de escritura con IA local diseñado para apoyar a guionistas y cineastas durante el proceso creativo.">
-        Meet D18 Script Agent. A local AI writing assistant designed to support screenwriters and filmmakers throughout the creative process.
+        <div class="workspace-main">
+          <div>
+            <div class="card-label" data-en="CREATIVE WORKSPACE" data-es="ESPACIO CREATIVO">CREATIVE WORKSPACE</div>
+            <h3 data-en="Your screenplay project" data-es="Tu proyecto de guion">Your screenplay project</h3>
+            <p data-en="A conceptual view of project materials and writing context."
+               data-es="Una representación conceptual del material y contexto de escritura del proyecto.">
+              A conceptual view of project materials and writing context.
+            </p>
+          </div>
+
+          <div class="workspace-block">
+            <div class="block-heading">
+              <span data-en="PROJECT MATERIAL" data-es="MATERIAL DEL PROYECTO">PROJECT MATERIAL</span>
+              <span>01</span>
+            </div>
+            <div class="workspace-line"></div>
+            <div class="workspace-line medium"></div>
+            <div class="workspace-line short"></div>
+          </div>
+
+          <div class="workspace-block">
+            <div class="block-heading">
+              <span data-en="AI ASSISTANCE" data-es="ASISTENCIA DE IA">AI ASSISTANCE</span>
+              <span>OLLAMA</span>
+            </div>
+            <p data-en="Local language model connected to the writing workflow."
+               data-es="Modelo de lenguaje local conectado al flujo de escritura.">
+              Local language model connected to the writing workflow.
+            </p>
+            <div class="workspace-line medium"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="workspace-footer">
+        <span>DADEUS AI</span>
+        <span>ILLUSTRATIVE CONCEPT — NOT THE ACTUAL APP UI</span>
+      </div>
+    </div>
+
+    <div class="inside-caption">
+      <span data-en="A visual explanation of the product structure."
+            data-es="Una explicación visual de la estructura del producto.">
+        A visual explanation of the product structure.
+      </span>
+      <span class="mono">D18 / 001</span>
+    </div>
+  </div>
+</section>
+
+<!-- INTERACTIVE DEMO -->
+
+<section class="section" id="demo">
+  <div class="container demo-layout">
+    <div class="reveal">
+      <div class="section-label" data-en="03 / INTERACTIVE EXPERIENCE" data-es="03 / EXPERIENCIA INTERACTIVA">03 / INTERACTIVE EXPERIENCE</div>
+      <h2 data-en="Explore the creative workflow."
+          data-es="Explora el proceso creativo.">Explore the creative workflow.</h2>
+
+      <p class="section-description"
+         data-en="Select a stage to see an illustrative example of how a writing project can be organized around D18."
+         data-es="Selecciona una fase para ver un ejemplo ilustrativo de cómo puede organizarse un proyecto de escritura con D18.">
+        Select a stage to see an illustrative example of how a writing project can be organized around D18.
       </p>
 
-      <div class="hero-actions">
-        <a class="button primary" href="https://github.com/Danielix18/D18-Script-Agent/releases"
-           data-en="DOWNLOAD D18 ↗" data-es="DESCARGAR D18 ↗">DOWNLOAD D18 ↗</a>
-        <a class="button secondary" href="#about"
-           data-en="DISCOVER THE PRODUCT ↓" data-es="DESCUBRIR EL PRODUCTO ↓">DISCOVER THE PRODUCT ↓</a>
-      </div>
+      <div class="demo-controls">
+        <button class="demo-tab active" data-stage="project">
+          <strong data-en="01 — Project context" data-es="01 — Contexto del proyecto">01 — Project context</strong>
+          <small data-en="Organize your project material" data-es="Organiza el material del proyecto">Organize your project material</small>
+        </button>
 
-      <div class="hero-meta">
-        <span>VERSION 1.0.0</span>
-        <span>WINDOWS</span>
-        <span>LOCAL AI</span>
+        <button class="demo-tab" data-stage="instructions">
+          <strong data-en="02 — Instructions" data-es="02 — Instrucciones">02 — Instructions</strong>
+          <small data-en="Define creative guidelines" data-es="Define las directrices creativas">Define creative guidelines</small>
+        </button>
+
+        <button class="demo-tab" data-stage="writing">
+          <strong data-en="03 — Writing assistance" data-es="03 — Asistencia de escritura">03 — Writing assistance</strong>
+          <small data-en="Explore an illustrative response" data-es="Explora una respuesta ilustrativa">Explore an illustrative response</small>
+        </button>
       </div>
     </div>
-  </header>
 
-  <main>
-    <section class="section" id="about">
-      <div class="container about-grid">
-        <div class="reveal">
-          <div class="section-label" data-en="01 / The project" data-es="01 / El proyecto">01 / The project</div>
-          <h2 data-en="Technology meets the art of cinema."
-              data-es="La tecnología se encuentra con el arte del cine.">
-            Technology meets the art of cinema.
-          </h2>
-          <p class="section-description"
-             data-en="D18 Script Agent is a desktop AI writing assistant developed by DADEUS AI. It is designed to support the creative development of cinematic stories, screenplays and film projects. Its local-first architecture connects to Ollama to run a language model on your own computer."
-             data-es="D18 Script Agent es un asistente de escritura con IA para escritorio desarrollado por DADEUS AI. Está diseñado para apoyar el desarrollo creativo de historias cinematográficas, guiones y proyectos audiovisuales. Su arquitectura local se conecta a Ollama para ejecutar un modelo de lenguaje en tu propio ordenador.">
-            D18 Script Agent is a desktop AI writing assistant developed by DADEUS AI. It is designed to support the creative development of cinematic stories, screenplays and film projects. Its local-first architecture connects to Ollama to run a language model on your own computer.
-          </p>
-        </div>
-
-        <div class="product-card reveal">
-          <div class="tag">DADEUS AI / PRODUCT 001</div>
-          <h3>D18 Script Agent</h3>
-          <div class="spec"><span>Developer</span><span>DADEUS AI</span></div>
-          <div class="spec"><span>Version</span><span>1.0.0</span></div>
-          <div class="spec"><span>Platform</span><span>Windows</span></div>
-          <div class="spec"><span>Interface</span><span>Python / Tkinter</span></div>
-          <div class="spec"><span>AI engine</span><span>Ollama</span></div>
-          <div class="spec"><span>Model</span><span>Llama 3.1 8B</span></div>
-        </div>
+    <div class="demo-screen reveal">
+      <div class="demo-screen-header">
+        <span>D18 / WORKFLOW EXPLORER</span>
+        <span class="mono" data-en="SIMULATION" data-es="SIMULACIÓN">SIMULATION</span>
       </div>
-    </section>
 
-    <section class="section" id="features">
-      <div class="container">
-        <div class="section-label" data-en="02 / Capabilities" data-es="02 / Capacidades">02 / Capabilities</div>
-        <h2 data-en="Built for the creative process."
-            data-es="Diseñado para el proceso creativo.">Built for the creative process.</h2>
-        <p class="section-description"
-           data-en="A focused tool that brings local AI technology into the screenwriting workflow."
-           data-es="Una herramienta que incorpora la tecnología de IA local al proceso de escritura cinematográfica.">
-          A focused tool that brings local AI technology into the screenwriting workflow.
+      <div id="demoContent" aria-live="polite">
+        <div class="card-label" data-en="STAGE 01" data-es="FASE 01">STAGE 01</div>
+        <h3 data-en="Project context" data-es="Contexto del proyecto">Project context</h3>
+        <p data-en="A screenplay project begins with its source material, ideas and creative references."
+           data-es="Un proyecto de guion comienza con su material de origen, ideas y referencias creativas.">
+          A screenplay project begins with its source material, ideas and creative references.
         </p>
-
-        <div class="features-grid">
-          <article class="feature reveal">
-            <div class="feature-number">01 / WRITING</div>
-            <h3 data-en="AI Writing Assistance" data-es="Asistencia de escritura con IA">AI Writing Assistance</h3>
-            <p data-en="Use a local language model to support cinematic writing and creative development."
-               data-es="Utiliza un modelo de lenguaje local para apoyar la escritura cinematográfica y el desarrollo creativo.">
-              Use a local language model to support cinematic writing and creative development.
-            </p>
-          </article>
-
-          <article class="feature reveal">
-            <div class="feature-number">02 / LOCAL</div>
-            <h3 data-en="Local AI Processing" data-es="Procesamiento de IA local">Local AI Processing</h3>
-            <p data-en="Connect to Ollama and run the language model locally on your computer."
-               data-es="Conéctate a Ollama y ejecuta el modelo de lenguaje localmente en tu ordenador.">
-              Connect to Ollama and run the language model locally on your computer.
-            </p>
-          </article>
-
-          <article class="feature reveal">
-            <div class="feature-number">03 / CONTEXT</div>
-            <h3 data-en="Creative Context" data-es="Contexto creativo">Creative Context</h3>
-            <p data-en="Use project instructions and screenplay material as context for the AI."
-               data-es="Utiliza las instrucciones del proyecto y el material del guion como contexto para la IA.">
-              Use project instructions and screenplay material as context for the AI.
-            </p>
-          </article>
-
-          <article class="feature reveal">
-            <div class="feature-number">04 / PROJECTS</div>
-            <h3 data-en="Project Organization" data-es="Organización de proyectos">Project Organization</h3>
-            <p data-en="Keep original material, project rules and different script versions organized."
-               data-es="Mantén organizados el material original, las normas del proyecto y las distintas versiones del guion.">
-              Keep original material, project rules and different script versions organized.
-            </p>
-          </article>
-
-          <article class="feature reveal">
-            <div class="feature-number">05 / DESKTOP</div>
-            <h3 data-en="Windows Application" data-es="Aplicación para Windows">Windows Application</h3>
-            <p data-en="A desktop application developed with Python and Tkinter."
-               data-es="Una aplicación de escritorio desarrollada con Python y Tkinter.">
-              A desktop application developed with Python and Tkinter.
-            </p>
-          </article>
-
-          <article class="feature reveal">
-            <div class="feature-number">06 / CREATIVE CONTROL</div>
-            <h3 data-en="Your Creative Vision" data-es="Tu visión creativa">Your Creative Vision</h3>
-            <p data-en="AI supports the process. The creative decisions remain yours."
-               data-es="La IA apoya el proceso. Las decisiones creativas siguen siendo tuyas.">
-              AI supports the process. The creative decisions remain yours.
-            </p>
-          </article>
+        <div class="demo-result"
+             data-en="Example: A project folder contains the original screenplay, reference documents and supporting notes."
+             data-es="Ejemplo: Una carpeta de proyecto contiene el guion original, documentos de referencia y notas de apoyo.">
+          Example: A project folder contains the original screenplay, reference documents and supporting notes.
         </div>
       </div>
-    </section>
 
-    <section class="section" id="workflow">
-      <div class="container">
-        <div class="section-label" data-en="03 / Workflow" data-es="03 / Funcionamiento">03 / Workflow</div>
-        <h2 data-en="From installation to creation."
-            data-es="De la instalación a la creación.">From installation to creation.</h2>
-
-        <div class="workflow">
-          <div class="workflow-step reveal">
-            <div class="number">STEP 01</div>
-            <h3 data-en="Install" data-es="Instala">Install</h3>
-            <p data-en="Install D18 Script Agent and configure the required Ollama environment."
-               data-es="Instala D18 Script Agent y configura el entorno necesario de Ollama.">
-              Install D18 Script Agent and configure the required Ollama environment.
-            </p>
-          </div>
-
-          <div class="workflow-step reveal">
-            <div class="number">STEP 02</div>
-            <h3 data-en="Connect" data-es="Conecta">Connect</h3>
-            <p data-en="The application communicates with the local Ollama API and selected model."
-               data-es="La aplicación se comunica con la API local de Ollama y el modelo seleccionado.">
-              The application communicates with the local Ollama API and selected model.
-            </p>
-          </div>
-
-          <div class="workflow-step reveal">
-            <div class="number">STEP 03</div>
-            <h3 data-en="Create" data-es="Crea">Create</h3>
-            <p data-en="Use the assistant to support your writing process and develop cinematic projects."
-               data-es="Utiliza el asistente para apoyar tu escritura y desarrollar proyectos cinematográficos.">
-              Use the assistant to support your writing process and develop cinematic projects.
-            </p>
-          </div>
-        </div>
+      <div class="demo-note"
+           data-en="ILLUSTRATIVE SIMULATION — NO AI MODEL IS RUNNING HERE."
+           data-es="SIMULACIÓN ILUSTRATIVA — AQUÍ NO SE ESTÁ EJECUTANDO NINGÚN MODELO DE IA.">
+        ILLUSTRATIVE SIMULATION — NO AI MODEL IS RUNNING HERE.
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    <section class="section" id="technology">
-      <div class="container">
-        <div class="section-label" data-en="04 / Technology" data-es="04 / Tecnología">04 / Technology</div>
-        <h2 data-en="A local-first architecture."
-            data-es="Una arquitectura basada en IA local.">A local-first architecture.</h2>
-        <p class="section-description"
-           data-en="D18 combines a lightweight desktop interface with a locally running language model."
-           data-es="D18 combina una interfaz de escritorio ligera con un modelo de lenguaje ejecutado localmente.">
-          D18 combines a lightweight desktop interface with a locally running language model.
+<!-- FEATURES -->
+
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-label" data-en="04 / CAPABILITIES" data-es="04 / CAPACIDADES">04 / CAPABILITIES</div>
+    <h2 data-en="Built around the creative process."
+        data-es="Diseñado alrededor del proceso creativo.">Built around the creative process.</h2>
+
+    <p class="section-description"
+       data-en="A focused desktop tool that brings local AI technology into the screenwriting workflow."
+       data-es="Una herramienta de escritorio que incorpora tecnología de IA local al proceso de escritura cinematográfica.">
+      A focused desktop tool that brings local AI technology into the screenwriting workflow.
+    </p>
+
+    <div class="features-grid">
+      <article class="feature reveal">
+        <div class="feature-number">01 / WRITING</div>
+        <div class="feature-icon">✳</div>
+        <h3 data-en="AI writing assistance" data-es="Asistencia de escritura con IA">AI writing assistance</h3>
+        <p data-en="Use a local language model to support cinematic writing and creative development."
+           data-es="Utiliza un modelo de lenguaje local para apoyar la escritura cinematográfica y el desarrollo creativo.">
+          Use a local language model to support cinematic writing and creative development.
         </p>
+      </article>
 
-        <div class="technology">
-          <span class="tech">Python</span>
-          <span class="tech">Tkinter</span>
-          <span class="tech">Ollama</span>
-          <span class="tech">Llama 3.1 8B</span>
-          <span class="tech">Local AI</span>
-          <span class="tech">Windows</span>
+      <article class="feature reveal">
+        <div class="feature-number">02 / LOCAL</div>
+        <div class="feature-icon">⌘</div>
+        <h3 data-en="Local AI processing" data-es="Procesamiento de IA local">Local AI processing</h3>
+        <p data-en="Connect to Ollama and run the language model locally on your computer."
+           data-es="Conéctate a Ollama y ejecuta el modelo de lenguaje localmente en tu ordenador.">
+          Connect to Ollama and run the language model locally on your computer.
+        </p>
+      </article>
+
+      <article class="feature reveal">
+        <div class="feature-number">03 / CONTEXT</div>
+        <div class="feature-icon">▤</div>
+        <h3 data-en="Creative context" data-es="Contexto creativo">Creative context</h3>
+        <p data-en="Use project instructions and screenplay material as context for the AI."
+           data-es="Utiliza las instrucciones del proyecto y el material del guion como contexto para la IA.">
+          Use project instructions and screenplay material as context for the AI.
+        </p>
+      </article>
+
+      <article class="feature reveal">
+        <div class="feature-number">04 / PROJECTS</div>
+        <div class="feature-icon">▧</div>
+        <h3 data-en="Project organization" data-es="Organización de proyectos">Project organization</h3>
+        <p data-en="Keep original material, project rules and different script versions organized."
+           data-es="Mantén organizados el material original, las normas del proyecto y las distintas versiones del guion.">
+          Keep original material, project rules and different script versions organized.
+        </p>
+      </article>
+
+      <article class="feature reveal">
+        <div class="feature-number">05 / DESKTOP</div>
+        <div class="feature-icon">▣</div>
+        <h3 data-en="Windows application" data-es="Aplicación para Windows">Windows application</h3>
+        <p data-en="A desktop application developed with Python and Tkinter."
+           data-es="Una aplicación de escritorio desarrollada con Python y Tkinter.">
+          A desktop application developed with Python and Tkinter.
+        </p>
+      </article>
+
+      <article class="feature reveal">
+        <div class="feature-number">06 / CREATIVE CONTROL</div>
+        <div class="feature-icon">◈</div>
+        <h3 data-en="Your creative vision" data-es="Tu visión creativa">Your creative vision</h3>
+        <p data-en="AI supports the process. The creative decisions remain yours."
+           data-es="La IA apoya el proceso. Las decisiones creativas siguen siendo tuyas.">
+          AI supports the process. The creative decisions remain yours.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+
+<section class="section" id="process">
+  <div class="container">
+    <div class="section-label" data-en="05 / THE WORKFLOW" data-es="05 / EL FLUJO DE TRABAJO">05 / THE WORKFLOW</div>
+    <h2 data-en="From an idea to a developed story."
+        data-es="De una idea a una historia desarrollada.">From an idea to a developed story.</h2>
+
+    <div class="process-list">
+      <div class="process-item reveal">
+        <div class="process-number">01</div>
+        <h3 data-en="Build your project" data-es="Construye tu proyecto">Build your project</h3>
+        <p data-en="Organize your original material, project instructions and screenplay versions."
+           data-es="Organiza tu material original, las instrucciones del proyecto y las versiones del guion.">
+          Organize your original material, project instructions and screenplay versions.
+        </p>
+      </div>
+
+      <div class="process-item reveal">
+        <div class="process-number">02</div>
+        <h3 data-en="Connect your AI" data-es="Conecta tu IA">Connect your AI</h3>
+        <p data-en="Use the local Ollama environment and the configured language model."
+           data-es="Utiliza el entorno local de Ollama y el modelo de lenguaje configurado.">
+          Use the local Ollama environment and the configured language model.
+        </p>
+      </div>
+
+      <div class="process-item reveal">
+        <div class="process-number">03</div>
+        <h3 data-en="Develop your story" data-es="Desarrolla tu historia">Develop your story</h3>
+        <p data-en="Work with the assistant to support your writing and creative development."
+           data-es="Trabaja con el asistente para apoyar tu escritura y desarrollo creativo.">
+          Work with the assistant to support your writing and creative development.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECHNOLOGY -->
+
+<section class="section" id="technology">
+  <div class="container">
+    <div class="section-label" data-en="06 / UNDER THE HOOD" data-es="06 / TECNOLOGÍA">06 / UNDER THE HOOD</div>
+    <h2 data-en="The technology behind D18."
+        data-es="La tecnología detrás de D18.">The technology behind D18.</h2>
+
+    <p class="section-description"
+       data-en="D18 combines a lightweight desktop interface with a locally running language model."
+       data-es="D18 combina una interfaz de escritorio ligera con un modelo de lenguaje ejecutado localmente.">
+      D18 combines a lightweight desktop interface with a locally running language model.
+    </p>
+
+    <div class="tech-grid">
+      <div class="architecture reveal">
+        <div class="arch-node">
+          <strong>D18 SCRIPT AGENT</strong>
+          <small>Python / Tkinter desktop application</small>
         </div>
+        <div class="arch-arrow">↓ LOCAL API CONNECTION ↓</div>
+        <div class="arch-node">
+          <strong>OLLAMA</strong>
+          <small>Local model runtime</small>
+        </div>
+        <div class="arch-arrow">↓ MODEL EXECUTION ↓</div>
+        <div class="arch-node">
+          <strong>LLAMA 3.1 8B</strong>
+          <small>Configured language model</small>
+        </div>
+      </div>
 
-        <h3 style="margin-top:50px"
-            data-en="System requirements"
-            data-es="Requisitos del sistema">System requirements</h3>
-
+      <div class="reveal">
+        <h3 data-en="A local-first approach."
+            data-es="Un enfoque basado en IA local.">A local-first approach.</h3>
         <p class="section-description" style="margin-top:15px"
-           data-en="A Windows computer, Ollama installed and configured, a compatible local model, and sufficient memory and storage. Internet access may be needed to download the software and model."
-           data-es="Un ordenador con Windows, Ollama instalado y configurado, un modelo local compatible y memoria y almacenamiento suficientes. Puede ser necesario disponer de conexión a Internet para descargar el programa y el modelo.">
-          A Windows computer, Ollama installed and configured, a compatible local model, and sufficient memory and storage. Internet access may be needed to download the software and model.
+           data-en="The current configuration uses Ollama to run the selected language model on the user's computer. The application communicates with the local Ollama API."
+           data-es="La configuración actual utiliza Ollama para ejecutar el modelo de lenguaje seleccionado en el ordenador del usuario. La aplicación se comunica con la API local de Ollama.">
+          The current configuration uses Ollama to run the selected language model on the user's computer.
+        </p>
+
+        <div class="tech-tags">
+          <span class="tech-tag">PYTHON</span>
+          <span class="tech-tag">TKINTER</span>
+          <span class="tech-tag">OLLAMA</span>
+          <span class="tech-tag">LLAMA 3.1 8B</span>
+          <span class="tech-tag">WINDOWS</span>
+          <span class="tech-tag">LOCAL AI</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="privacy-box reveal">
+      <div>
+        <div class="section-label" data-en="07 / LOCAL PROCESSING" data-es="07 / PROCESAMIENTO LOCAL">07 / LOCAL PROCESSING</div>
+        <h2 data-en="Your work. Your computer."
+            data-es="Tu trabajo. Tu ordenador.">Your work. Your computer.</h2>
+        <p data-en="D18 is designed to work with a locally running Ollama instance. Model processing takes place on your computer when using that local setup. Internet access may still be needed for downloads and updates. Read the project privacy documentation for details."
+           data-es="D18 está diseñado para trabajar con una instancia local de Ollama. El procesamiento del modelo tiene lugar en tu ordenador cuando utilizas esa configuración local. Puede seguir siendo necesaria una conexión a Internet para descargas y actualizaciones. Consulta la documentación de privacidad del proyecto para más detalles.">
+          D18 is designed to work with a locally running Ollama instance.
         </p>
       </div>
-    </section>
-
-    <section class="section" id="privacy">
-      <div class="container">
-        <div class="privacy-panel reveal">
-          <div>
-            <div class="section-label" data-en="05 / Privacy" data-es="05 / Privacidad">05 / Privacy</div>
-            <h2 data-en="Your work. Your computer."
-                data-es="Tu trabajo. Tu ordenador.">Your work. Your computer.</h2>
-            <p data-en="D18 is designed to work with a locally running Ollama instance. Model processing takes place on your computer when using that local setup. Internet access may still be required for downloads and updates. Consult the project privacy documentation for details."
-               data-es="D18 está diseñado para trabajar con una instancia local de Ollama. El procesamiento del modelo tiene lugar en tu ordenador cuando utilizas esa configuración local. Puede seguir siendo necesaria una conexión a Internet para descargas y actualizaciones. Consulta la documentación de privacidad del proyecto para más detalles.">
-              D18 is designed to work with a locally running Ollama instance. Model processing takes place on your computer when using that local setup. Internet access may still be required for downloads and updates. Consult the project privacy documentation for details.
-            </p>
-          </div>
-          <a class="button secondary" href="https://github.com/Danielix18/D18-Script-Agent"
-             data-en="VIEW REPOSITORY ↗" data-es="VER REPOSITORIO ↗">VIEW REPOSITORY ↗</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="download">
-      <div class="container">
-        <div class="download reveal">
-          <div class="section-label" data-en="06 / Get started" data-es="06 / Empieza ahora">06 / Get started</div>
-          <h2 data-en="Every great story starts somewhere."
-              data-es="Toda gran historia empieza en algún lugar.">Every great story starts somewhere.</h2>
-          <p data-en="Explore D18 Script Agent, access the latest release and discover the project on GitHub."
-             data-es="Descubre D18 Script Agent, accede a la última versión y explora el proyecto en GitHub.">
-            Explore D18 Script Agent, access the latest release and discover the project on GitHub.
-          </p>
-
-          <div class="hero-actions">
-            <a class="button primary" href="https://github.com/Danielix18/D18-Script-Agent/releases"
-               data-en="DOWNLOAD RELEASE ↗" data-es="DESCARGAR VERSIÓN ↗">DOWNLOAD RELEASE ↗</a>
-            <a class="button secondary" href="https://github.com/Danielix18/D18-Script-Agent"
-               data-en="EXPLORE ON GITHUB ↗" data-es="EXPLORAR EN GITHUB ↗">EXPLORE ON GITHUB ↗</a>
-          </div>
-
-          <div class="hero-meta" style="justify-content:center">
-            <span>D18 SCRIPT AGENT</span>
-            <span>VERSION 1.0.0</span>
-            <span>DADEUS AI</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="faq">
-      <div class="container">
-        <div class="section-label" data-en="07 / FAQ" data-es="07 / Preguntas frecuentes">07 / FAQ</div>
-        <h2 data-en="Frequently asked questions."
-            data-es="Preguntas frecuentes.">Frequently asked questions.</h2>
-
-        <div class="faq">
-          <details>
-            <summary data-en="What is D18 Script Agent?" data-es="¿Qué es D18 Script Agent?">What is D18 Script Agent?</summary>
-            <p data-en="It is a desktop AI writing assistant developed by DADEUS AI, focused on cinematic storytelling and screenwriting."
-               data-es="Es un asistente de escritura con IA para escritorio desarrollado por DADEUS AI, centrado en la narrativa cinematográfica y la escritura de guiones.">
-              It is a desktop AI writing assistant developed by DADEUS AI, focused on cinematic storytelling and screenwriting.
-            </p>
-          </details>
-
-          <details>
-            <summary data-en="Does it use cloud AI?" data-es="¿Utiliza IA en la nube?">Does it use cloud AI?</summary>
-            <p data-en="Its intended configuration uses Ollama to run a language model locally on your computer."
-               data-es="Su configuración está diseñada para utilizar Ollama y ejecutar un modelo de lenguaje localmente en tu ordenador.">
-              Its intended configuration uses Ollama to run a language model locally on your computer.
-            </p>
-          </details>
-
-          <details>
-            <summary data-en="Which AI model does it use?" data-es="¿Qué modelo de IA utiliza?">Which AI model does it use?</summary>
-            <p data-en="The current V1.0.0 configuration uses Llama 3.1 8B through Ollama."
-               data-es="La configuración actual de la versión 1.0.0 utiliza Llama 3.1 8B mediante Ollama.">
-              The current V1.0.0 configuration uses Llama 3.1 8B through Ollama.
-            </p>
-          </details>
-
-          <details>
-            <summary data-en="Which operating system is supported?" data-es="¿Qué sistema operativo admite?">Which operating system is supported?</summary>
-            <p data-en="The current public release is designed for Windows."
-               data-es="La versión pública actual está diseñada para Windows.">
-              The current public release is designed for Windows.
-            </p>
-          </details>
-
-          <details>
-            <summary data-en="Where can I download it?" data-es="¿Dónde puedo descargarlo?">Where can I download it?</summary>
-            <p data-en="The latest releases and installation files are available on the project's GitHub Releases page."
-               data-es="Las últimas versiones y los archivos de instalación están disponibles en la sección Releases del proyecto en GitHub.">
-              The latest releases and installation files are available on the project's GitHub Releases page.
-            </p>
-          </details>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="container footer-content">
-      <div>
-        <strong>DADEUS AI</strong>
-        <p data-en="Independent AI software development."
-           data-es="Desarrollo independiente de software de IA.">Independent AI software development.</p>
-      </div>
-      <p>D18 Script Agent © 2026 DADEUS AI. All rights reserved.</p>
+      <a class="button secondary" href="https://github.com/Danielix18/D18-Script-Agent"
+         data-en="VIEW SOURCE ↗" data-es="VER CÓDIGO ↗">VIEW SOURCE ↗</a>
     </div>
-  </footer>
+  </div>
+</section>
 
-  <script>
-    // LANGUAGE SWITCHER
-    const languageToggle = document.getElementById("languageToggle");
-    const enOption = document.getElementById("enOption");
-    const esOption = document.getElementById("esOption");
+<!-- BRAND STATEMENT -->
 
-    function setLanguage(language) {
-      document.documentElement.lang = language;
+<section class="section brand-section">
+  <div class="container reveal">
+    <div class="section-label" data-en="08 / THE DADEUS AI VISION" data-es="08 / LA VISIÓN DE DADEUS AI">08 / THE DADEUS AI VISION</div>
 
-      document.querySelectorAll("[data-en][data-es]").forEach(element => {
-        element.textContent = element.dataset[language];
+    <div class="brand-statement">
+      <span data-en="TECHNOLOGY" data-es="TECNOLOGÍA">TECHNOLOGY</span><br>
+      <span data-en="SHOULD AMPLIFY" data-es="PARA AMPLIFICAR">SHOULD AMPLIFY</span><br>
+      <span data-en="CREATIVITY." data-es="LA CREATIVIDAD.">CREATIVITY.</span>
+    </div>
+
+    <p class="section-description" style="margin-top:30px"
+       data-en="D18 is a DADEUS AI project exploring how accessible artificial intelligence can support creative work and cinematic storytelling."
+       data-es="D18 es un proyecto de DADEUS AI que explora cómo la inteligencia artificial accesible puede apoyar el trabajo creativo y la narrativa cinematográfica.">
+      D18 is a DADEUS AI project exploring how accessible artificial intelligence can support creative work and cinematic storytelling.
+    </p>
+  </div>
+</section>
+
+<!-- REQUIREMENTS -->
+
+<section class="section" id="requirements">
+  <div class="container">
+    <div class="section-label" data-en="09 / GETTING STARTED" data-es="09 / EMPEZAR">09 / GETTING STARTED</div>
+    <h2 data-en="Everything you need to begin."
+        data-es="Todo lo que necesitas para empezar.">Everything you need to begin.</h2>
+
+    <div class="features-grid">
+      <article class="feature reveal">
+        <div class="feature-number">01 / PLATFORM</div>
+        <h3 data-en="Windows PC" data-es="Ordenador Windows">Windows PC</h3>
+        <p data-en="The current public release is designed for Windows."
+           data-es="La versión pública actual está diseñada para Windows.">
+          The current public release is designed for Windows.
+        </p>
+      </article>
+
+      <article class="feature reveal">
+        <div class="feature-number">02 / RUNTIME</div>
+        <h3>Ollama</h3>
+        <p data-en="Install and configure Ollama to run the language model locally."
+           data-es="Instala y configura Ollama para ejecutar el modelo de lenguaje localmente.">
+          Install and configure Ollama to run the language model locally.
+        </p>
+      </article>
+
+      <article class="feature reveal">
+        <div class="feature-number">03 / MODEL</div>
+        <h3>Llama 3.1 8B</h3>
+        <p data-en="The current V1.0.0 configuration uses this model through Ollama."
+           data-es="La configuración actual de V1.0.0 utiliza este modelo mediante Ollama.">
+          The current V1.0.0 configuration uses this model through Ollama.
+        </p>
+      </article>
+    </div>
+
+    <div style="margin-top:30px">
+      <a class="button secondary" href="https://github.com/Danielix18/D18-Script-Agent#readme"
+         data-en="READ INSTALLATION GUIDE ↗" data-es="LEER GUÍA DE INSTALACIÓN ↗">
+        READ INSTALLATION GUIDE ↗
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- DOWNLOAD -->
+
+<section class="section" id="download">
+  <div class="container">
+    <div class="download-panel reveal">
+      <div class="section-label" data-en="10 / GET D18" data-es="10 / CONSIGUE D18">10 / GET D18</div>
+
+      <h2 data-en="Every great story starts somewhere."
+          data-es="Toda gran historia empieza en algún lugar.">
+        Every great story starts somewhere.
+      </h2>
+
+      <p data-en="Explore D18 Script Agent, access the latest release and discover the project on GitHub."
+         data-es="Descubre D18 Script Agent, accede a la última versión y explora el proyecto en GitHub.">
+        Explore D18 Script Agent, access the latest release and discover the project on GitHub.
+      </p>
+
+      <div class="hero-buttons">
+        <a class="button primary" href="https://github.com/Danielix18/D18-Script-Agent/releases"
+           data-en="DOWNLOAD RELEASE ↗" data-es="DESCARGAR VERSIÓN ↗">
+          DOWNLOAD RELEASE ↗
+        </a>
+
+        <a class="button secondary" href="https://github.com/Danielix18/D18-Script-Agent"
+           data-en="EXPLORE GITHUB ↗" data-es="EXPLORAR GITHUB ↗">
+          EXPLORE GITHUB ↗
+        </a>
+      </div>
+
+      <div class="hero-meta" style="justify-content:center">
+        <span>D18 SCRIPT AGENT</span>
+        <span>VERSION 1.0.0</span>
+        <span>DADEUS AI</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+
+<section class="section" id="faq">
+  <div class="container">
+    <div class="section-label" data-en="FAQ / QUESTIONS" data-es="FAQ / PREGUNTAS">FAQ / QUESTIONS</div>
+    <h2 data-en="Frequently asked questions."
+        data-es="Preguntas frecuentes.">Frequently asked questions.</h2>
+
+    <div class="faq">
+      <details>
+        <summary data-en="What is D18 Script Agent?" data-es="¿Qué es D18 Script Agent?">What is D18 Script Agent?</summary>
+        <p data-en="It is a desktop AI writing assistant developed by DADEUS AI, focused on cinematic storytelling and screenwriting."
+           data-es="Es un asistente de escritura con IA para escritorio desarrollado por DADEUS AI, centrado en la narrativa cinematográfica y la escritura de guiones.">
+          It is a desktop AI writing assistant developed by DADEUS AI.
+        </p>
+      </details>
+
+      <details>
+        <summary data-en="Does D18 use cloud AI?" data-es="¿D18 utiliza IA en la nube?">Does D18 use cloud AI?</summary>
+        <p data-en="Its intended configuration uses Ollama to run a language model locally on your computer."
+           data-es="Su configuración está diseñada para utilizar Ollama y ejecutar un modelo de lenguaje localmente en tu ordenador.">
+          Its intended configuration uses Ollama to run a language model locally on your computer.
+        </p>
+      </details>
+
+      <details>
+        <summary data-en="Which AI model does it use?" data-es="¿Qué modelo de IA utiliza?">Which AI model does it use?</summary>
+        <p data-en="The current V1.0.0 configuration uses Llama 3.1 8B through Ollama."
+           data-es="La configuración actual de la versión 1.0.0 utiliza Llama 3.1 8B mediante Ollama.">
+          The current V1.0.0 configuration uses Llama 3.1 8B through Ollama.
+        </p>
+      </details>
+
+      <details>
+        <summary data-en="Which operating system is supported?" data-es="¿Qué sistema operativo admite?">Which operating system is supported?</summary>
+        <p data-en="The current public release is designed for Windows."
+           data-es="La versión pública actual está diseñada para Windows.">
+          The current public release is designed for Windows.
+        </p>
+      </details>
+
+      <details>
+        <summary data-en="Where can I download D18?" data-es="¿Dónde puedo descargar D18?">Where can I download D18?</summary>
+        <p data-en="The latest releases and installation files are available on the project's GitHub Releases page."
+           data-es="Las últimas versiones y los archivos de instalación están disponibles en la sección Releases del proyecto en GitHub.">
+          The latest releases and installation files are available on the project's GitHub Releases page.
+        </p>
+      </details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container footer-inner">
+    <div>
+      <div class="footer-brand">DADEUS AI</div>
+      <p data-en="Independent AI software development."
+         data-es="Desarrollo independiente de software de IA.">
+        Independent AI software development.
+      </p>
+    </div>
+
+    <div>
+      <a href="https://github.com/Danielix18/D18-Script-Agent">GitHub ↗</a>
+      <p>D18 Script Agent © 2026 DADEUS AI.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* LANGUAGE */
+
+const languageToggle = document.getElementById("languageToggle");
+const enOption = document.getElementById("enOption");
+const esOption = document.getElementById("esOption");
+
+function setLanguage(language) {
+  document.documentElement.lang = language;
+
+  document.querySelectorAll("[data-en][data-es]").forEach(element => {
+    element.textContent = element.dataset[language];
+  });
+
+  enOption.classList.toggle("selected", language === "en");
+  esOption.classList.toggle("selected", language === "es");
+
+  document.querySelector('meta[name="description"]').content =
+    language === "en"
+      ? "D18 Script Agent. A local AI writing assistant for cinematic storytelling, developed by DADEUS AI."
+      : "D18 Script Agent. Un asistente de escritura con IA local para narrativa cinematográfica, desarrollado por DADEUS AI.";
+
+  try {
+    localStorage.setItem("d18-language", language);
+  } catch(error) {}
+}
+
+languageToggle.addEventListener("click", () => {
+  setLanguage(document.documentElement.lang === "en" ? "es" : "en");
+});
+
+try {
+  const savedLanguage = localStorage.getItem("d18-language");
+  if(savedLanguage === "es" || savedLanguage === "en") {
+    setLanguage(savedLanguage);
+  }
+} catch(error) {}
+
+/* MOBILE MENU */
+
+const menuBtn = document.getElementById("menuBtn");
+const navLinks = document.getElementById("navLinks");
+
+menuBtn.addEventListener("click", () => {
+  navLinks.classList.toggle("open");
+  document.body.classList.toggle("menu-open");
+  menuBtn.textContent = navLinks.classList.contains("open") ? "×" : "☰";
+});
+
+navLinks.querySelectorAll("a").forEach(link => {
+  link.addEventListener("click", () => {
+    navLinks.classList.remove("open");
+    document.body.classList.remove("menu-open");
+    menuBtn.textContent = "☰";
+  });
+});
+
+/* SCROLL PROGRESS */
+
+window.addEventListener("scroll", () => {
+  const total = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = total > 0 ? (window.scrollY / total) * 100 : 0;
+  document.getElementById("progress").style.width = progress + "%";
+}, {passive:true});
+
+/* INTERACTIVE WORKFLOW DEMO */
+
+const demoContent = document.getElementById("demoContent");
+const demoTabs = document.querySelectorAll(".demo-tab");
+
+const demoStages = {
+  project: {
+    en: {
+      label:"STAGE 01",
+      title:"Project context",
+      description:"A screenplay project begins with its source material, ideas and creative references.",
+      result:"Example: A project folder contains the original screenplay, reference documents and supporting notes."
+    },
+    es: {
+      label:"FASE 01",
+      title:"Contexto del proyecto",
+      description:"Un proyecto de guion comienza con su material de origen, ideas y referencias creativas.",
+      result:"Ejemplo: Una carpeta de proyecto contiene el guion original, documentos de referencia y notas de apoyo."
+    }
+  },
+  instructions: {
+    en: {
+      label:"STAGE 02",
+      title:"Creative instructions",
+      description:"Project guidelines can help define the context and direction of the writing process.",
+      result:"Example: Instructions describe the tone, narrative rules, characters and creative requirements of the project."
+    },
+    es: {
+      label:"FASE 02",
+      title:"Instrucciones creativas",
+      description:"Las directrices del proyecto pueden ayudar a definir el contexto y la dirección del proceso de escritura.",
+      result:"Ejemplo: Las instrucciones describen el tono, las reglas narrativas, los personajes y los requisitos creativos del proyecto."
+    }
+  },
+  writing: {
+    en: {
+      label:"STAGE 03",
+      title:"Writing assistance",
+      description:"A local language model can be used to support the creative development of a screenplay.",
+      result:"Illustrative example: Explore alternative dialogue approaches, review a scene or develop a character idea. This is not a live AI response."
+    },
+    es: {
+      label:"FASE 03",
+      title:"Asistencia de escritura",
+      description:"Un modelo de lenguaje local puede utilizarse para apoyar el desarrollo creativo de un guion.",
+      result:"Ejemplo ilustrativo: Explora alternativas de diálogo, revisa una escena o desarrolla una idea de personaje. Esto no es una respuesta real de IA."
+    }
+  }
+};
+
+function showDemo(stage) {
+  const language = document.documentElement.lang === "es" ? "es" : "en";
+  const content = demoStages[stage][language];
+
+  demoContent.innerHTML = `
+    <div class="card-label">${content.label}</div>
+    <h3>${content.title}</h3>
+    <p>${content.description}</p>
+    <div class="demo-result">${content.result}</div>
+  `;
+
+  demoTabs.forEach(tab => {
+    tab.classList.toggle("active", tab.dataset.stage === stage);
+  });
+}
+
+demoTabs.forEach(tab => {
+  tab.addEventListener("click", () => showDemo(tab.dataset.stage));
+});
+
+languageToggle.addEventListener("click", () => {
+  const activeTab = document.querySelector(".demo-tab.active");
+  if(activeTab) showDemo(activeTab.dataset.stage);
+});
+
+/* GSAP + SCROLLTRIGGER */
+
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+if(!reducedMotion) {
+  const gsapScript = document.createElement("script");
+  gsapScript.src = "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js";
+
+  gsapScript.onload = () => {
+    const scrollScript = document.createElement("script");
+    scrollScript.src = "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js";
+
+    scrollScript.onload = () => {
+      gsap.registerPlugin(ScrollTrigger);
+
+      const intro = gsap.timeline({
+        defaults:{ease:"power3.out"}
       });
 
-      enOption.classList.toggle("active", language === "en");
-      esOption.classList.toggle("active", language === "es");
+      intro
+        .from(".hero .eyebrow",{y:25,opacity:0,duration:.7})
+        .from(".hero h1 span",{y:70,opacity:0,duration:1,stagger:.15},"-=.35")
+        .from(".hero-description",{y:25,opacity:0,duration:.7},"-=.5")
+        .from(".hero-buttons .button",{y:20,opacity:0,duration:.6,stagger:.12},"-=.4")
+        .from(".hero-meta span",{opacity:0,y:12,duration:.5,stagger:.1},"-=.3");
 
-      document.title = language === "en"
-        ? "D18 Script Agent | DADEUS AI"
-        : "D18 Script Agent | DADEUS AI";
-
-      document.querySelector('meta[name="description"]').content =
-        language === "en"
-          ? "D18 Script Agent — A local AI writing assistant for cinematic storytelling, developed by DADEUS AI."
-          : "D18 Script Agent — Un asistente de escritura con IA local para narrativa cinematográfica, desarrollado por DADEUS AI.";
-
-      try {
-        localStorage.setItem("d18-language", language);
-      } catch (error) {}
-    }
-
-    languageToggle.addEventListener("click", () => {
-      const nextLanguage = document.documentElement.lang === "en" ? "es" : "en";
-      setLanguage(nextLanguage);
-    });
-
-    try {
-      const savedLanguage = localStorage.getItem("d18-language");
-      if (savedLanguage === "es" || savedLanguage === "en") {
-        setLanguage(savedLanguage);
-      }
-    } catch (error) {}
-
-    // GSAP ANIMATIONS
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (!reduceMotion) {
-      const gsapScript = document.createElement("script");
-      gsapScript.src = "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js";
-
-      gsapScript.onload = () => {
-        const scrollScript = document.createElement("script");
-        scrollScript.src = "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js";
-
-        scrollScript.onload = () => {
-          gsap.registerPlugin(ScrollTrigger);
-
-          const intro = gsap.timeline({ defaults: { ease: "power3.out" } });
-
-          intro.from(".hero-content .eyebrow", {
-            y: 25, opacity: 0, duration: .7
-          })
-          .from(".hero h1 span", {
-            y: 65, opacity: 0, duration: .9, stagger: .15
-          }, "-=.35")
-          .from(".hero-description", {
-            y: 25, opacity: 0, duration: .7
-          }, "-=.45")
-          .from(".hero-actions .button", {
-            y: 20, opacity: 0, duration: .6, stagger: .12
-          }, "-=.4")
-          .from(".hero-meta span", {
-            opacity: 0, y: 12, duration: .5, stagger: .1
-          }, "-=.3");
-
-          gsap.to(".hero-orbit", {
-            rotation: 25,
-            duration: 35,
-            repeat: -1,
-            ease: "none"
-          });
-
-          gsap.utils.toArray(".reveal").forEach(element => {
-            gsap.to(element, {
-              opacity: 1,
-              y: 0,
-              duration: .9,
-              ease: "power3.out",
-              scrollTrigger: {
-                trigger: element,
-                start: "top 88%",
-                once: true
-              }
-            });
-          });
-        };
-
-        document.head.appendChild(scrollScript);
-      };
-
-      document.head.appendChild(gsapScript);
-    } else {
-      document.querySelectorAll(".reveal").forEach(element => {
-        element.style.opacity = "1";
-        element.style.transform = "none";
+      gsap.to("#heroOrbit",{
+        rotation:35,
+        duration:45,
+        repeat:-1,
+        ease:"none"
       });
-    }
-  </script>
+
+      gsap.utils.toArray(".reveal").forEach(element => {
+        gsap.fromTo(element,
+          {opacity:0,y:40},
+          {
+            opacity:1,
+            y:0,
+            duration:1,
+            ease:"power3.out",
+            scrollTrigger:{
+              trigger:element,
+              start:"top 88%",
+              once:true
+            }
+          }
+        );
+      });
+
+      gsap.to(".hero-orbit",{
+        y:100,
+        ease:"none",
+        scrollTrigger:{
+          trigger:".hero",
+          start:"top top",
+          end:"bottom top",
+          scrub:1
+        }
+      });
+    };
+
+    document.head.appendChild(scrollScript);
+  };
+
+  document.head.appendChild(gsapScript);
+} else {
+  document.querySelectorAll(".reveal").forEach(element => {
+    element.style.opacity="1";
+    element.style.transform="none";
+  });
+}
+</script>
+
 </body>
 </html>
