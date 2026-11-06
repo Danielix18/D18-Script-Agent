@@ -29,8 +29,8 @@
   --bg2:#101010;
   --panel:#151515;
   --panel2:#1b1b1b;
-  --orange:#ff762b;
-  --orange2:#ff9a5b;
+  --orange:#C6A66A;
+  --orange2:#D8BD8A;
   --white:#f5f2ee;
   --muted:#99948e;
   --line:rgba(255,255,255,.11);
@@ -179,7 +179,7 @@ button,a {-webkit-tap-highlight-color:transparent}
 
 .button.primary:hover {
   background:var(--orange2);
-  box-shadow:0 10px 40px rgba(255,118,43,.17);
+  box-shadow:0 10px 40px rgba(198,166,106,.17);
 }
 
 .button.secondary:hover {
@@ -212,8 +212,8 @@ button,a {-webkit-tap-highlight-color:transparent}
   overflow:hidden;
   padding:150px 0 100px;
   background:
-    radial-gradient(ellipse at 76% 45%,rgba(255,118,43,.14),transparent 37%),
-    radial-gradient(ellipse at 10% 90%,rgba(255,118,43,.06),transparent 40%);
+    radial-gradient(ellipse at 76% 45%,rgba(198,166,106,.14),transparent 37%),
+    radial-gradient(ellipse at 10% 90%,rgba(198,166,106,.06),transparent 40%);
 }
 
 .hero-grid {
@@ -275,9 +275,9 @@ button,a {-webkit-tap-highlight-color:transparent}
   right:-100px;
   top:50%;
   transform:translateY(-50%);
-  border:1px solid rgba(255,118,43,.17);
+  border:1px solid rgba(198,166,106,.17);
   border-radius:50%;
-  box-shadow:0 0 0 70px rgba(255,118,43,.025),0 0 0 140px rgba(255,118,43,.015);
+  box-shadow:0 0 0 70px rgba(198,166,106,.025),0 0 0 140px rgba(198,166,106,.015);
 }
 
 .hero-orbit:before,.hero-orbit:after {
@@ -290,7 +290,7 @@ button,a {-webkit-tap-highlight-color:transparent}
 
 .hero-orbit:after {
   inset:150px;
-  border-color:rgba(255,118,43,.2);
+  border-color:rgba(198,166,106,.2);
 }
 
 .orbit-core {
@@ -301,8 +301,8 @@ button,a {-webkit-tap-highlight-color:transparent}
   left:50%;
   transform:translate(-50%,-50%);
   border-radius:50%;
-  background:radial-gradient(circle,rgba(255,118,43,.3),transparent 70%);
-  box-shadow:0 0 90px rgba(255,118,43,.18);
+  background:radial-gradient(circle,rgba(198,166,106,.3),transparent 70%);
+  box-shadow:0 0 90px rgba(198,166,106,.18);
 }
 
 .orbit-dot {
@@ -365,7 +365,7 @@ h2 {
   height:200px;
   right:-100px;
   bottom:-100px;
-  background:rgba(255,118,43,.12);
+  background:rgba(198,166,106,.12);
   filter:blur(60px);
 }
 
@@ -428,7 +428,7 @@ h2 {
   display:inline-flex;
   align-items:center;
   gap:8px;
-  border:1px solid rgba(255,118,43,.3);
+  border:1px solid rgba(198,166,106,.3);
   padding:8px 11px;
   color:var(--orange);
   font:9px "DM Mono",monospace;
@@ -501,7 +501,7 @@ h2 {
 }
 
 .workspace-item.active {
-  background:rgba(255,118,43,.1);
+  background:rgba(198,166,106,.1);
   color:var(--orange);
 }
 
@@ -595,7 +595,7 @@ h2 {
 
 .demo-tab:hover,.demo-tab.active {
   border-color:var(--orange);
-  background:rgba(255,118,43,.07);
+  background:rgba(198,166,106,.07);
   color:white;
 }
 
@@ -670,7 +670,7 @@ h2 {
 
 .feature:hover {
   transform:translateY(-6px);
-  border-color:rgba(255,118,43,.55);
+  border-color:rgba(198,166,106,.55);
   background:#171717;
 }
 
@@ -783,7 +783,7 @@ h2 {
   display:flex;
   align-items:center;
   background:
-    radial-gradient(ellipse at 80% 50%,rgba(255,118,43,.12),transparent 40%);
+    radial-gradient(ellipse at 80% 50%,rgba(198,166,106,.12),transparent 40%);
 }
 
 .brand-statement {
@@ -803,7 +803,7 @@ h2 {
   padding:100px 30px;
   border:1px solid var(--line);
   background:
-    radial-gradient(ellipse at 50% 100%,rgba(255,118,43,.15),transparent 60%),
+    radial-gradient(ellipse at 50% 100%,rgba(198,166,106,.15),transparent 60%),
     #111;
 }
 
@@ -928,7 +928,161 @@ footer {
     transition-duration:.01ms!important;
   }
   .reveal {opacity:1;transform:none}
+  .script-line {opacity:1;transform:none}
 }
+
+/* PREMIUM CINEMATIC REFINEMENT */
+:root {
+  --bg:#080808;
+  --bg2:#101010;
+  --panel:#141414;
+  --panel2:#1b1a18;
+  --orange:#C6A66A;
+  --orange2:#D8BD8A;
+  --white:#F1EEE7;
+  --muted:#A39D92;
+  --line:rgba(241,238,231,.10);
+  --max:1240px;
+}
+::selection {background:rgba(198,166,106,.35);color:#fff}
+html {scroll-behavior:smooth}
+body {background:#080808;letter-spacing:-.01em}
+.noise {opacity:.018}
+.progress {height:2px;background:linear-gradient(90deg,#9D7B45,#E3D0A8)}
+.header {background:rgba(8,8,8,.82);border-bottom-color:rgba(255,255,255,.07)}
+.nav {min-height:82px}
+.logo {font-size:21px;letter-spacing:3px}
+.logo span {color:#C6A66A}
+.nav-links a {font-size:11px;letter-spacing:.04em}
+.nav-links a:hover,.lang-btn .selected {color:#D8BD8A}
+.lang-btn {border-color:rgba(198,166,106,.24);padding:8px 13px}
+.button {border-radius:2px;letter-spacing:1.3px;padding:16px 24px}
+.button.primary {background:#C6A66A;border-color:#C6A66A;color:#111}
+.button.primary:hover {background:#D8BD8A;border-color:#D8BD8A;box-shadow:0 12px 36px rgba(198,166,106,.13)}
+.button.secondary:hover {border-color:#C6A66A;color:#D8BD8A}
+.eyebrow,.section-label,.card-label,.feature-number,.process-number {color:#C6A66A}
+.hero {
+  min-height:min(940px,100svh);
+  background:
+    radial-gradient(ellipse at 78% 48%,rgba(198,166,106,.105),transparent 32%),
+    radial-gradient(ellipse at 10% 90%,rgba(198,166,106,.035),transparent 42%),
+    #080808;
+}
+.hero-grid {opacity:.055;background-size:90px 90px}
+.hero h1 {font-size:clamp(58px,9vw,124px);letter-spacing:-.085em;line-height:.91;margin:38px 0}
+.orange {color:#D0B47E}
+.hero-description {font-size:16px;line-height:1.85;max-width:570px}
+.hero-meta {gap:28px;color:#8C877E}
+.hero-meta span:before {color:#C6A66A}
+.hero-orbit {opacity:.38;border-color:rgba(198,166,106,.18);box-shadow:0 0 0 70px rgba(198,166,106,.018),0 0 0 140px rgba(198,166,106,.01)}
+.hero-orbit:after {border-color:rgba(198,166,106,.16)}
+.orbit-core {background:radial-gradient(circle,rgba(198,166,106,.22),transparent 70%);box-shadow:0 0 90px rgba(198,166,106,.10)}
+.orbit-dot {background:#C6A66A;box-shadow:0 0 20px rgba(198,166,106,.6)}
+.section {padding:145px 0;border-top-color:rgba(255,255,255,.075)}
+h2 {font-size:clamp(38px,5vw,68px);letter-spacing:-.065em;line-height:1.04}
+.section-description {line-height:1.9}
+.info-card,.workspace,.demo-screen,.feature,.architecture {border-radius:3px}
+.info-card {background:linear-gradient(145deg,#171614,#0d0d0d)}
+.info-card:after {background:rgba(198,166,106,.09)}
+.workspace {border-radius:4px;box-shadow:0 45px 120px rgba(0,0,0,.45)}
+.workspace-top {background:#171614}
+.workspace-item.active {background:rgba(198,166,106,.09);color:#D8BD8A}
+.feature {background:linear-gradient(145deg,#141414,#0e0e0e);transition:transform .5s cubic-bezier(.2,.7,.2,1),border-color .5s,background .5s}
+.feature:hover {transform:translateY(-4px);border-color:rgba(198,166,106,.38);background:#171614}
+.feature-icon {color:#C6A66A}
+.demo-tab {border-radius:2px;transition:border-color .35s,background .35s,color .35s}
+.demo-tab:hover,.demo-tab.active {border-color:rgba(198,166,106,.6);background:rgba(198,166,106,.055)}
+.demo-result {border-left-color:#C6A66A}
+.arch-arrow {color:#C6A66A}
+.privacy-box {background:linear-gradient(110deg,#171614,#0c0c0c)}
+.brand-section {background:radial-gradient(ellipse at 80% 50%,rgba(198,166,106,.075),transparent 40%)}
+.brand-statement span {color:#D0B47E}
+.download-panel {background:radial-gradient(ellipse at 50% 100%,rgba(198,166,106,.09),transparent 60%),#101010}
+.concept-label {border-color:rgba(198,166,106,.28);color:#D0B47E}
+.concept-label:before {background:#C6A66A}
+summary:after {color:#C6A66A}
+.footer-brand {color:#D0B47E}
+.reveal {opacity:0;transform:translateY(24px)}
+/* A quiet editorial screenplay sequence, revealed by scroll rather than a ticker. */
+.screenplay-section {
+  position:relative;
+  min-height:210vh;
+  border-top:1px solid rgba(255,255,255,.075);
+  background:
+    radial-gradient(ellipse at 78% 42%,rgba(198,166,106,.075),transparent 35%),
+    linear-gradient(180deg,#0b0b0a,#090909);
+}
+.screenplay-sticky {
+  position:sticky;
+  top:0;
+  min-height:100svh;
+  display:grid;
+  grid-template-columns:.78fr 1.22fr;
+  align-items:center;
+  gap:7vw;
+  width:min(1240px,88%);
+  margin:0 auto;
+  padding:130px 0 80px;
+}
+.screenplay-copy {max-width:440px}
+.screenplay-copy h2 {font-size:clamp(38px,4.6vw,62px);margin:25px 0}
+.screenplay-copy .section-description {font-size:14px}
+.screenplay-progress {height:1px;background:rgba(255,255,255,.13);margin-top:42px;overflow:hidden}
+.screenplay-progress span {display:block;width:0;height:100%;background:#C6A66A;transform-origin:left}
+.screenplay-caption {font-size:9px;color:#8C877E;letter-spacing:1.8px;margin-top:14px}
+.script-paper-wrap {position:relative;max-width:690px;width:100%;margin-left:auto}
+.script-paper {
+  min-height:570px;
+  padding:28px 42px 24px;
+  color:#28251f;
+  background:linear-gradient(135deg,#e8e2d5,#d8d0c0);
+  box-shadow:0 35px 100px rgba(0,0,0,.42);
+  transform:rotate(1deg);
+}
+.script-paper-top,.script-paper-foot {
+  display:flex;justify-content:space-between;gap:20px;
+  font:9px "DM Mono",monospace;letter-spacing:1.2px;color:#777064;
+}
+.script-paper-top {padding-bottom:17px;border-bottom:1px solid rgba(40,37,31,.18)}
+.script-page {padding:54px 8% 35px;font-family:"DM Mono",monospace;font-size:clamp(10px,1.05vw,13px);line-height:1.85}
+.script-line {margin:0 0 18px;opacity:.08;transform:translateY(9px);will-change:opacity,transform}
+.script-scene {font-weight:500;margin-bottom:38px}
+.script-action {max-width:440px}
+.script-character {text-align:center;margin:34px 0 5px}
+.script-dialogue {max-width:280px;margin:0 auto 30px;text-align:center}
+.script-transition {text-align:right;margin-top:44px}
+.script-paper-foot {padding-top:17px;border-top:1px solid rgba(40,37,31,.18)}
+.script-side-note {position:absolute;right:-42px;bottom:18px;writing-mode:vertical-rl;color:#8d877b;font-size:8px;letter-spacing:1.5px}
+.script-side-note span {color:#C6A66A}
+@media(max-width:900px) {
+  .screenplay-section {min-height:190vh}
+  .screenplay-sticky {grid-template-columns:1fr;gap:38px;padding:115px 0 60px;align-content:center}
+  .screenplay-copy {max-width:650px}
+  .screenplay-copy h2 {max-width:600px}
+  .script-paper-wrap {max-width:650px;margin:0 auto}
+  .script-paper {min-height:440px;padding:22px 28px}
+  .script-page {padding:32px 6% 20px}
+}
+@media(max-width:650px) {
+  .nav {min-height:68px}
+  .hero {min-height:790px}
+  .hero h1 {letter-spacing:-.075em}
+  .section {padding:92px 0}
+  .screenplay-section {min-height:auto;padding:90px 0}
+  .screenplay-sticky {position:relative;min-height:auto;width:88%;padding:0;gap:34px}
+  .screenplay-copy h2 {font-size:40px}
+  .script-paper {min-height:390px;padding:18px 17px;transform:none}
+  .script-page {padding:28px 2% 18px;font-size:9px;line-height:1.7}
+  .script-line {margin-bottom:13px}
+  .script-scene {margin-bottom:25px}
+  .script-side-note {display:none}
+}
+@media(prefers-reduced-motion:reduce) {
+  .screenplay-section {min-height:auto}
+  .screenplay-sticky {position:relative}
+  .script-line {opacity:1;transform:none}
+}
+
 </style>
 </head>
 
@@ -943,6 +1097,7 @@ footer {
 
     <div class="nav-links" id="navLinks">
       <a href="#about" data-en="About" data-es="Proyecto">About</a>
+      <a href="#screenplay" data-en="The process" data-es="El proceso">The process</a>
       <a href="#inside" data-en="Inside D18" data-es="Conoce D18">Inside D18</a>
       <a href="#features" data-en="Features" data-es="Funciones">Features</a>
       <a href="#technology" data-en="Technology" data-es="Tecnología">Technology</a>
@@ -1001,22 +1156,40 @@ footer {
   </div>
 </section>
 
-<!-- MARQUEE -->
+<!-- CINEMATIC SCREENPLAY SEQUENCE -->
 
-<div class="marquee">
-  <div class="marquee-track">
-    <span>CINEMATIC STORYTELLING <b>✳</b></span>
-    <span>LOCAL ARTIFICIAL INTELLIGENCE <b>✳</b></span>
-    <span>CREATIVE TECHNOLOGY <b>✳</b></span>
-    <span>SCREENWRITING <b>✳</b></span>
-    <span>DADEUS AI <b>✳</b></span>
-    <span>CINEMATIC STORYTELLING <b>✳</b></span>
-    <span>LOCAL ARTIFICIAL INTELLIGENCE <b>✳</b></span>
-    <span>CREATIVE TECHNOLOGY <b>✳</b></span>
-    <span>SCREENWRITING <b>✳</b></span>
-    <span>DADEUS AI <b>✳</b></span>
+<section class="screenplay-section" id="screenplay">
+  <div class="screenplay-sticky">
+    <div class="screenplay-copy">
+      <div class="section-label" data-en="A STORY IN PROGRESS" data-es="UNA HISTORIA EN PROCESO">A STORY IN PROGRESS</div>
+      <h2 data-en="Ideas become scenes. Scenes become stories." data-es="Las ideas se convierten en escenas. Las escenas, en historias.">Ideas become scenes. Scenes become stories.</h2>
+      <p class="section-description" data-en="A screenplay is built one decision at a time. D18 is designed to support the creative process while the writer stays in control." data-es="Un guion se construye decisión a decisión. D18 está diseñado para acompañar el proceso creativo mientras el control sigue en manos del escritor.">A screenplay is built one decision at a time. D18 is designed to support the creative process while the writer stays in control.</p>
+      <div class="screenplay-progress"><span id="screenplayProgress"></span></div>
+      <div class="screenplay-caption mono" data-en="SCROLL TO REVEAL THE SCENE" data-es="DESPLÁZATE PARA DESCUBRIR LA ESCENA">SCROLL TO REVEAL THE SCENE</div>
+    </div>
+    <div class="script-paper-wrap">
+      <div class="script-paper">
+        <div class="script-paper-top">
+          <span>D18 / SCRIPT STUDY</span>
+          <span>SCENE 01</span>
+        </div>
+        <div class="script-page">
+          <div class="script-line script-scene" data-en="INT. EMPTY CINEMA — NIGHT" data-es="INT. CINE VACÍO — NOCHE">INT. EMPTY CINEMA — NIGHT</div>
+          <div class="script-line script-action" data-en="The projector wakes. A narrow beam cuts through the darkness." data-es="El proyector despierta. Un haz de luz atraviesa la oscuridad.">The projector wakes. A narrow beam cuts through the darkness.</div>
+          <div class="script-line script-action" data-en="Dust drifts through the light. Somewhere in the room, a seat moves." data-es="El polvo flota en la luz. En algún lugar de la sala, una butaca se mueve.">Dust drifts through the light. Somewhere in the room, a seat moves.</div>
+          <div class="script-line script-character" data-en="ALEX" data-es="ALEX">ALEX</div>
+          <div class="script-line script-dialogue" data-en="I thought nobody came here anymore." data-es="Pensaba que ya no venía nadie aquí.">I thought nobody came here anymore.</div>
+          <div class="script-line script-action" data-en="No answer. The image on the screen begins to move." data-es="Nadie responde. La imagen de la pantalla empieza a moverse.">No answer. The image on the screen begins to move.</div>
+          <div class="script-line script-character" data-en="ALEX" data-es="ALEX">ALEX</div>
+          <div class="script-line script-dialogue" data-en="Then who started the projector?" data-es="Entonces, ¿quién ha encendido el proyector?">Then who started the projector?</div>
+          <div class="script-line script-transition" data-en="CUT TO BLACK." data-es="FUNDIDO A NEGRO.">CUT TO BLACK.</div>
+        </div>
+        <div class="script-paper-foot"><span>WRITING IS A PROCESS</span><span>01 / 09</span></div>
+      </div>
+      <div class="script-side-note mono">D18 SCRIPT AGENT <span>·</span> CREATIVE WORKFLOW</div>
+    </div>
   </div>
-</div>
+</section>
 
 <!-- ABOUT -->
 
@@ -1712,7 +1885,44 @@ if(!reducedMotion) {
     scrollScript.src = "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js";
 
     scrollScript.onload = () => {
+
       gsap.registerPlugin(ScrollTrigger);
+
+      /* SCREENPLAY: the scene is revealed progressively as the visitor scrolls. */
+      const screenplayLines = gsap.utils.toArray(".script-line");
+      if (screenplayLines.length && !window.matchMedia("(max-width: 650px)").matches) {
+        const screenplayTimeline = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".screenplay-section",
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 1.1
+          }
+        });
+        screenplayLines.forEach((line) => {
+          screenplayTimeline.to(line, {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: "power2.out"
+          });
+        });
+        gsap.to("#screenplayProgress", {
+          width: "100%",
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".screenplay-section",
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 1
+          }
+        });
+      } else {
+        gsap.set(screenplayLines, {opacity:1, y:0});
+        const progressBar = document.getElementById("screenplayProgress");
+        if (progressBar) progressBar.style.width = "100%";
+      }
+
 
       const intro = gsap.timeline({
         defaults:{ease:"power3.out"}
@@ -1766,6 +1976,7 @@ if(!reducedMotion) {
 
   document.head.appendChild(gsapScript);
 } else {
+  document.querySelectorAll(".script-line").forEach(element => { element.style.opacity="1"; element.style.transform="none"; });
   document.querySelectorAll(".reveal").forEach(element => {
     element.style.opacity="1";
     element.style.transform="none";
